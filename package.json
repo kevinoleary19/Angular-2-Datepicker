@@ -1,6 +1,7 @@
 {
   "name": "angular2-datepicker",
-  "version": "1.0.0",
+  "version": "0.1-alpha",
+  "author": "Kevin O'Leary",
   "license": "MIT",
   "dependencies": {
     "@angular/common": "2.0.0-rc.6",
@@ -20,5 +21,9 @@
   "devDependencies": {
     "concurrently": "^2.2.0",
     "typescript": "^2.0.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/koleary94/Angular-2-Datepicker"
   }
 }
