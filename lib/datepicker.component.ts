@@ -4,7 +4,7 @@ import { Calendar } from './calendar';
 
 @Component({
   selector: 'datepicker',
-  templateUrl: 'app/datepicker/datepicker.component.html'
+  templateUrl: './datepicker.component.html'
 })
 export class DatepickerComponent {
   // api bindings
