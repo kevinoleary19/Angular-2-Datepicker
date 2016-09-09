@@ -10,11 +10,23 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 const core_1 = require('@angular/core');
 let AppComponent = class AppComponent {
+    constructor() {
+        this.show = true;
+        this.date = new Date(2014, 5);
+    }
 };
+__decorate([
+    core_1.Input(), 
+    __metadata('design:type', Date)
+], AppComponent.prototype, "date", void 0);
+__decorate([
+    core_1.Input(), 
+    __metadata('design:type', Boolean)
+], AppComponent.prototype, "show", void 0);
 AppComponent = __decorate([
     core_1.Component({
         selector: 'my-app',
-        template: '<datepicker></datepicker>'
+        template: `<material-datepicker *ngIf="show" [date]="date"></material-datepicker><button (click)="show =! show">Toggle datepicker</button>`
     }), 
     __metadata('design:paramtypes', [])
 ], AppComponent);

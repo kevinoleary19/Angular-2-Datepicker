@@ -1,8 +1,16 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 
 @Component({
   selector: 'my-app',
-  template: '<datepicker></datepicker>'
+  template: `<material-datepicker *ngIf="show" [date]="date"></material-datepicker><button (click)="show =! show">Toggle datepicker</button>`
 })
-export class AppComponent { }
+export class AppComponent {
+  @Input() date: Date
+  @Input() show: Boolean;
+
+  constructor() {
+    this.show = true;
+    this.date = new Date(2014, 5);
+  }
+}

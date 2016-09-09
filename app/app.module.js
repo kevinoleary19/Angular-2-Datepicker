@@ -12,18 +12,18 @@ const core_1 = require('@angular/core');
 const platform_browser_1 = require('@angular/platform-browser');
 const forms_1 = require('@angular/forms');
 const app_component_1 = require('./app.component');
-const datepicker_component_1 = require('./datepicker/datepicker.component');
+const datepicker_module_1 = require('./datepicker/datepicker.module');
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
     core_1.NgModule({
         imports: [
             platform_browser_1.BrowserModule,
+            datepicker_module_1.DatepickerModule,
             forms_1.FormsModule
         ],
         declarations: [
-            app_component_1.AppComponent,
-            datepicker_component_1.DatepickerComponent
+            app_component_1.AppComponent
         ],
         bootstrap: [app_component_1.AppComponent]
     }), 
