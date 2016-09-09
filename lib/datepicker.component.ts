@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, Input, Output, Renderer } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output, Renderer } from '@angular/core';
 
 import { Calendar } from './calendar';
 
@@ -95,7 +95,7 @@ import { Calendar } from './calendar';
     </div>
     `
 })
-export class DatepickerComponent {
+export class DatepickerComponent implements OnInit {
   // api bindings
   @Input() accentColor: string;
   @Input() date: Date;
@@ -119,6 +119,7 @@ export class DatepickerComponent {
   months: Array<string>;
 
   constructor(private elementRef: ElementRef, private renderer: Renderer) {
+    this.animationListener = null;
     this.showCalendar = false;
     this.dayNames = [ 'S', 'M', 'T', 'W', 'T', 'F', 'S' ];
     this.months = [
@@ -127,19 +128,30 @@ export class DatepickerComponent {
     ];
     this.animateLeft = false;
     this.animateRight = false;
+    this.calendar = new Calendar();
+  }
 
-    const date = new Date();
-    this.currentMonthNumber = date.getMonth()
+  ngOnInit() {
+    let date;
+    if (this.date) {
+      date = this.date;
+      this.setInputText(this.date);
+    } else {
+      date = new Date();
+    }
+
+    this.currentMonthNumber = date.getMonth();
     this.currentMonth = this.months[this.currentMonthNumber];
     this.currentYear = date.getFullYear();
 
-    this.calendar = new Calendar();
     const calendarArray = this.calendar.monthDays(this.currentYear, this.currentMonthNumber);
     this.calendarDays = [].concat.apply([], calendarArray);
   }
 
   ngOnDestroy() {
-    this.removeAnimationListener();
+    if (this.animationListener) {
+        this.removeAnimationListener();
+    }
   }
 
   addAnimationListener() {
