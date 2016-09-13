@@ -1,5 +1,6 @@
 .datepicker {
   position: relative;
+  display: inline-block;
   color: #2b2b2b;
   font-family: 'Helvetica Neue', 'Helvetica', 'Arial', 'Calibri', 'Roboto';
 }
@@ -11,6 +12,7 @@
   height: 24.25em;
   width: 20.5em;
   z-index: 1000;
+  background-color: #ffffff;
   color: #333333;
   box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
   cursor: default;
@@ -110,9 +112,7 @@
 
 .datepicker__input {
   font-size: 14px;
-  color: #2b2b2b;
   outline: none;
-  border: 1px solid #dadada;
   border-radius: 0.1rem;
   padding: .2em .6em;
 }
