@@ -1,6 +1,6 @@
 import { Component, ElementRef, EventEmitter, Input, OnInit, Output, Renderer } from '@angular/core';
 
-import { Calendar } from './calendar';
+import { Calendar } from './calendar.js';
 
 @Component({
   selector: 'material-datepicker',
@@ -70,14 +70,19 @@ import { Calendar } from './calendar';
           <div
             id="datepicker__calendar__month"
             class="datepicker__calendar__month"
-            [ngClass]="{'datepicker__calendar__month--animate-left': animateLeft, 'datepicker__calendar__month--animate-right': animateRight}"
+            [ngClass]="{'datepicker__calendar__month--animate-left': animateLeft,
+                        'datepicker__calendar__month--animate-right': animateRight}"
           >
             <div
               *ngFor="let day of calendarDays"
               class="datepicker__calendar__month__day"
-              [ngClass]="{'datepicker__calendar__month__day--current-day': isCurrentDay(day), 'datepicker__calendar__month__day--chosen-day': isChosenDay(day)}"
-              [ngStyle]="{'cursor': day == 0 ? 'initial' : 'pointer'}"
+              [ngStyle]="{'cursor': day == 0 ? 'initial' : 'pointer',
+                          'background-color': getDayBackgroundColor(day),
+                          'color': isHoveredDay(day) ? accentColor : getDayFontColor(day)
+                          }"
               (click)="onSelectDay(day)"
+              (mouseenter)="hoveredDay = day"
+              (mouseleave)="hoveredDay = null"
             >
               <span *ngIf="day != 0">
                 {{ day.getDate() }}
@@ -108,27 +113,40 @@ export class DatepickerComponent implements OnInit {
   @Input() calendarDays: Array<number>;
   @Input() currentMonth: string;
   @Input() dayNames: Array<String>;
+  @Input() hoveredDay: Date;
   @Input() inputText: string;
   @Input() showCalendar: boolean;
   @Output() onSelect = new EventEmitter<Date>();
 
   animationListener: any;
   calendar: Calendar;
+  colors: any;
   currentMonthNumber: number;
   currentYear: number;
   months: Array<string>;
 
   constructor(private elementRef: ElementRef, private renderer: Renderer) {
-    this.animationListener = null;
+    // view logic
     this.showCalendar = false;
+    // colors
+    this.colors = {
+      'black': '#333333',
+      'blue': '#1285bf',
+      'lightGrey': '#f1f1f1',
+      'white': '#fff'
+    }
+    this.accentColor = this.colors['blue'];
+    // time
+    this.calendar = new Calendar();
     this.dayNames = [ 'S', 'M', 'T', 'W', 'T', 'F', 'S' ];
     this.months = [
         'January', 'February', 'March', 'April', 'May', 'June', 'July',
         'August', 'September', 'October', 'November',' December'
     ];
+    // animations
+    this.animationListener = null;
     this.animateLeft = false;
     this.animateRight = false;
-    this.calendar = new Calendar();
   }
 
   ngOnInit() {
@@ -162,6 +180,24 @@ export class DatepickerComponent implements OnInit {
     })
   }
 
+  getDayBackgroundColor(day: Date): string {
+    let color = this.colors['white'];
+    if (this.isChosenDay(day)) {
+      color = this.accentColor;
+    } else if (this.isCurrentDay(day)) {
+      color = this.colors['lightGrey'];
+    }
+    return color;
+  }
+
+  getDayFontColor(day: Date) {
+    let color = this.colors['black'];
+    if (this.isChosenDay(day)) {
+      color = this.colors['white'];
+    }
+    return color;
+  }
+
   isChosenDay(day: Date): boolean {
     if (day) {
       return this.date ? day.toDateString() == this.date.toDateString() : false;
@@ -172,16 +208,28 @@ export class DatepickerComponent implements OnInit {
 
   isCurrentDay(day: Date): boolean {
     if (day) {
-      return day.toDateString() == new Date().toDateString() && !this.isChosenDay(day);
+      return day.toDateString() == new Date().toDateString();
     } else {
       return false;
     }
+  }
+
+  isHoveredDay(day: Date): boolean {
+    return this.hoveredDay ? this.hoveredDay == day && !this.isChosenDay(day) : false;
   }
 
   setCurrentMonth(monthNumber: number) {
     this.currentMonth = this.months[monthNumber];
     const calendarArray = this.calendar.monthDays(this.currentYear, this.currentMonthNumber);
     this.calendarDays = [].concat.apply([], calendarArray);
+  }
+
+  setHoveredDay(day: Date) {
+    this.hoveredDay = day;
+  }
+
+  removeHoveredDay(day: Date) {
+    this.hoveredDay = null;
   }
 
   setInputText(date: Date) {
