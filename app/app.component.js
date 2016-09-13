@@ -26,7 +26,7 @@ __decorate([
 AppComponent = __decorate([
     core_1.Component({
         selector: 'my-app',
-        template: `<material-datepicker *ngIf="show" [date]="date"></material-datepicker><button (click)="show =! show">Toggle datepicker</button>`
+        template: `<material-datepicker *ngIf="show"></material-datepicker><button (click)="show =! show">Toggle datepicker</button>`
     }), 
     __metadata('design:paramtypes', [])
 ], AppComponent);

@@ -5,10 +5,11 @@
 }
 
 .datepicker__calendar {
+  font-size: 14px;
   position: absolute;
-  top: 1.75rem;
-  height: 25.5rem;
-  width: 20.5rem;
+  top: 1.9em;
+  height: 24.25em;
+  width: 20.5em;
   z-index: 1000;
   color: #333333;
   box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
@@ -20,85 +21,76 @@
   color: #d8d8d8;
   cursor: pointer;
   position: absolute;
-  bottom: 24px;
-  left: 25px;
+  bottom: 1em;
+  left: 1.8em;
+  transition: 0.37s;
 }
 
 .datepicker__calendar__cancel:hover {
   color: #b1b1b1;
-  transition: 0.37s;
 }
 
 .datepicker__calendar__content {
-  margin-top: 14px;
-  padding: 0 15px;
   display: flex;
   flex-flow: wrap;
+  justify-content: center;
+  margin-top: 0.2em;
 }
 
 .datepicker__calendar__label {
-  width: 32px;
-  height: 32px;
-  line-height: 32px;
+  width: 2.2em;
+  height: 2.2em;
+  line-height: 2.2em;
   display: inline-block;
   text-align: center;
-  margin: 5px;
+  margin: 0.2em;
   color: #d8d8d8;
-}
-
-.datepicker__calendar__month__day {
-  width: 32px;
-  height: 32px;
-  border-radius: 16px;
-  line-height: 32px;
-  display: inline-block;
-  text-align: center;
-  margin: 5px;
-
-  transition: .2s color;
-}
-
-.datepicker__calendar__month__day--chosen-day {
-  background-color: #1285bf;
-  color: #fff;
-}
-
-.datepicker__calendar__month__day--chosen-day:hover {
-  color: #fff !important;
-}
-
-.datepicker__calendar__month__day--current-day {
-  background-color: #f1f1f1;
 }
 
 .datepicker__calendar__month {
   display: flex;
   flex-flow: wrap;
-  height: 210px;
+  justify-content: center;
 }
 
-.datepicker__calendar__month__day:hover {
-  color: #1285bf;
+.datepicker__calendar__month--animate-left {
+  animation: 0.2s animateMonthLeft;
+}
+
+.datepicker__calendar__month--animate-right {
+  animation: 0.2s animateMonthRight;
+}
+
+.datepicker__calendar__month__day {
+  width: 2.2em;
+  height: 2.2em;
+  border-radius: 2.2em;
+  line-height: 2.2em;
+  display: inline-block;
+  text-align: center;
+  margin: 0.2em;
+
+  transition: 0.37s;
 }
 
 .datepicker__calendar__nav {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 3rem;
+  height: 3em;
   background-color: #fff;
   border-bottom: 1px solid #e8e8e8;
 }
 
 .datepicker__calendar__nav__arrow {
-  width: 10px;
-  height: 10px;
+  width: 0.8em;
+  height: 0.8em;
   cursor: pointer;
   transition: 0.37s;
 }
 
 .datepicker__calendar__nav__arrow:hover {
-  transform: scale(1.2);
+  transform: scale(1.1);
 }
 
 .datepicker__calendar__nav__chevron {
@@ -111,30 +103,21 @@
 }
 
 .datepicker__calendar__nav__header {
-  width: 11rem;
-  margin: 0 1rem;
+  width: 11em;
+  margin: 0 1em;
   text-align: center;
 }
 
 .datepicker__input {
-  font-size: 1rem;
+  font-size: 14px;
   color: #2b2b2b;
   outline: none;
-  border: 0.1rem solid #dadada;
+  border: 1px solid #dadada;
   border-radius: 0.1rem;
-  padding: 0.2rem;
+  padding: .2em .6em;
 }
 
-.datepicker__calendar__month--animate-left {
-  animation: 0.2s animateLeftMonthChange;
-}
-
-.datepicker__calendar__month--animate-right {
-  animation: 0.2s animateRightMonthChange;
-}
-
-
-@-webkit-keyframes animateLeftMonthChange {
+@-webkit-keyframes animateMonthLeft {
     50%  {
       transform: translateX(105%);
     }
@@ -144,7 +127,7 @@
     }
 }
 
-@-webkit-keyframes animateRightMonthChange {
+@-webkit-keyframes animateMonthRight {
     50%  {
       transform: translateX(-105%);
     }

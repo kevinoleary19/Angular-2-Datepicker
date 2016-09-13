@@ -2,7 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 
-import { DatepickerComponent } from './datepicker.component';
+import { DatepickerComponent } from './datepicker.component.js';
 
 @NgModule({
   declarations: [ DatepickerComponent ],
