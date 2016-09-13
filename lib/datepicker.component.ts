@@ -11,6 +11,9 @@ import { Calendar } from './calendar.js';
     >
       <input
         class="datepicker__input"
+        [ngStyle]="{'color': altInputStyle ? colors['white'] : colors['black'],
+                    'background-color': altInputStyle ? accentColor : colors['white'],
+                    'border': altInputStyle ? '' : 'border: 1px solid #dadada'}"
         (click)="onInputClick()"
         [(ngModel)]="inputText"
         readonly="true"
@@ -103,6 +106,7 @@ import { Calendar } from './calendar.js';
 export class DatepickerComponent implements OnInit {
   // api bindings
   @Input() accentColor: string;
+  @Input() altInputStyle: boolean;
   @Input() date: Date;
   @Input() fontFamily: string;
   @Input() rangeStart: Date;
@@ -133,9 +137,10 @@ export class DatepickerComponent implements OnInit {
       'black': '#333333',
       'blue': '#1285bf',
       'lightGrey': '#f1f1f1',
-      'white': '#fff'
-    }
+      'white': '#ffffff'
+    };
     this.accentColor = this.colors['blue'];
+    this.altInputStyle = false;
     // time
     this.calendar = new Calendar();
     this.dayNames = [ 'S', 'M', 'T', 'W', 'T', 'F', 'S' ];
