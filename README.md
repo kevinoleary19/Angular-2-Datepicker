@@ -4,6 +4,10 @@ A minimalist datepicker library for Angular 2
 
 ![](https://j.gifs.com/ERwG6l.gif)
 
+### Important!
+
+This library is still in development. I can't guarantee I will not make breaking changes before it reaches a stable release.
+
 ### Installation
 ```
 npm install angular2-material-datepicker
