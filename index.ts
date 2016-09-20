@@ -1,1 +1,1 @@
-export { DatepickerModule } from './lib/datepicker.module';
+export * from './src/datepicker.module';

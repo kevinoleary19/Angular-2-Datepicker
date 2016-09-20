@@ -8,19 +8,26 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-const platform_browser_1 = require('@angular/platform-browser');
-const forms_1 = require('@angular/forms');
-const core_1 = require('@angular/core');
-const datepicker_component_js_1 = require('./datepicker.component.js');
-let DatepickerModule = class DatepickerModule {
-};
-DatepickerModule = __decorate([
-    core_1.NgModule({
-        declarations: [datepicker_component_js_1.DatepickerComponent],
-        exports: [datepicker_component_js_1.DatepickerComponent],
-        imports: [platform_browser_1.BrowserModule, forms_1.FormsModule]
-    }), 
-    __metadata('design:paramtypes', [])
-], DatepickerModule);
+function __export(m) {
+    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+}
+var platform_browser_1 = require('@angular/platform-browser');
+var forms_1 = require('@angular/forms');
+var core_1 = require('@angular/core');
+var datepicker_component_1 = require('./datepicker.component');
+__export(require('./datepicker.component'));
+var DatepickerModule = (function () {
+    function DatepickerModule() {
+    }
+    DatepickerModule = __decorate([
+        core_1.NgModule({
+            declarations: [datepicker_component_1.DatepickerComponent],
+            exports: [datepicker_component_1.DatepickerComponent],
+            imports: [platform_browser_1.BrowserModule, forms_1.FormsModule]
+        }), 
+        __metadata('design:paramtypes', [])
+    ], DatepickerModule);
+    return DatepickerModule;
+}());
 exports.DatepickerModule = DatepickerModule;
 //# sourceMappingURL=datepicker.module.js.map

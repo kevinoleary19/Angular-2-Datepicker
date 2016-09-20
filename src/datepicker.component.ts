@@ -1,9 +1,178 @@
 import { Component, ElementRef, EventEmitter, Input, OnInit, Output, Renderer } from '@angular/core';
 
-import { Calendar } from './calendar.js';
+import { Calendar } from './calendar';
 
 @Component({
   selector: 'material-datepicker',
+  styles: [
+    `.datepicker {
+      position: relative;
+      display: inline-block;
+      color: #2b2b2b;
+      font-family: 'Helvetica Neue', 'Helvetica', 'Arial', 'Calibri', 'Roboto';
+    }
+
+    .datepicker__calendar {
+      font-size: 14px;
+      position: absolute;
+      top: 1.9em;
+      height: 24.25em;
+      width: 20.5em;
+      z-index: 1000;
+      background-color: #ffffff;
+      color: #333333;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+      cursor: default;
+      overflow: hidden;
+    }
+
+    .datepicker__calendar__cancel {
+      color: #d8d8d8;
+      cursor: pointer;
+      position: absolute;
+      bottom: 1em;
+      left: 1.8em;
+      -webkit-transition: 0.37s;
+      transition: 0.37s;
+    }
+
+    .datepicker__calendar__cancel:hover {
+      color: #b1b1b1;
+    }
+
+    .datepicker__calendar__content {
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+      -ms-flex-flow: wrap;
+          flex-flow: wrap;
+      -webkit-box-pack: center;
+         -ms-flex-pack: center;
+       justify-content: center;
+      margin-top: 0.2em;
+    }
+
+    .datepicker__calendar__label {
+      width: 2.2em;
+      height: 2.2em;
+      line-height: 2.2em;
+      display: inline-block;
+      text-align: center;
+      margin: 0.2em;
+      color: #d8d8d8;
+    }
+
+    .datepicker__calendar__month {
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+      -ms-flex-flow: wrap;
+          flex-flow: wrap;
+      -webkit-box-pack: center;
+         -ms-flex-pack: center;
+       justify-content: center;
+    }
+
+    .datepicker__calendar__month--animate-left {
+      -webkit-animation: 0.2s animateMonthLeft;
+              animation: 0.2s animateMonthLeft;
+    }
+
+    .datepicker__calendar__month--animate-right {
+      -webkit-animation: 0.2s animateMonthRight;
+              animation: 0.2s animateMonthRight;
+    }
+
+    .datepicker__calendar__month__day {
+      width: 2.2em;
+      height: 2.2em;
+      border-radius: 2.2em;
+      line-height: 2.2em;
+      display: inline-block;
+      text-align: center;
+      margin: 0.2em;
+
+      -webkit-transition: 0.37s;
+
+      transition: 0.37s;
+    }
+
+    .datepicker__calendar__nav {
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+      -webkit-box-pack: center;
+         -ms-flex-pack: center;
+       justify-content: center;
+      -webkit-box-align: center;
+         -ms-flex-align: center;
+            align-items: center;
+      height: 3em;
+      background-color: #fff;
+      border-bottom: 1px solid #e8e8e8;
+    }
+
+    .datepicker__calendar__nav__arrow {
+      width: 0.8em;
+      height: 0.8em;
+      cursor: pointer;
+      -webkit-transition: 0.37s;
+      transition: 0.37s;
+    }
+
+    .datepicker__calendar__nav__arrow:hover {
+      -webkit-transform: scale(1.05);
+              transform: scale(1.05);
+    }
+
+    .datepicker__calendar__nav__chevron {
+      fill: #bbbbbb;
+      -webkit-transition: 0.37s;
+      transition: 0.37s;
+    }
+
+    .datepicker__calendar__nav__chevron:hover {
+      fill: #2b2b2b;
+    }
+
+    .datepicker__calendar__nav__header {
+      width: 11em;
+      margin: 0 1em;
+      text-align: center;
+    }
+
+    .datepicker__input {
+      font-size: 14px;
+      outline: none;
+      border-radius: 0.1rem;
+      padding: .2em .6em;
+    }
+
+    @-webkit-keyframes animateMonthLeft {
+        50%  {
+          -webkit-transform: translateX(105%);
+                  transform: translateX(105%);
+        }
+
+        50.1% {
+          -webkit-transform: translateX(-105%);
+                  transform: translateX(-105%);
+        }
+    }
+
+    @-webkit-keyframes animateMonthRight {
+        50%  {
+          -webkit-transform: translateX(-105%);
+                  transform: translateX(-105%);
+        }
+
+        50.1% {
+          -webkit-transform: translateX(105%);
+                  transform: translateX(105%);
+        }
+    }
+`
+  ],
   template: `
     <div
       class="datepicker"
@@ -13,7 +182,7 @@ import { Calendar } from './calendar.js';
         class="datepicker__input"
         [ngStyle]="{'color': altInputStyle ? colors['white'] : colors['black'],
                     'background-color': altInputStyle ? accentColor : colors['white'],
-                    'border': altInputStyle ? '' : 'border: 1px solid #dadada'}"
+                    'border': altInputStyle ? '' : '1px solid #dadada'}"
         (click)="onInputClick()"
         [(ngModel)]="inputText"
         readonly="true"

@@ -1,4 +1,6 @@
 "use strict";
-var datepicker_module_1 = require('./lib/datepicker.module');
-exports.DatepickerModule = datepicker_module_1.DatepickerModule;
+function __export(m) {
+    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+}
+__export(require('./src/datepicker.module'));
 //# sourceMappingURL=index.js.map
