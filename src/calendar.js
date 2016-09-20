@@ -10,18 +10,21 @@
 //        return this.message
 //    };
 // }
-class Calendar {
-    constructor(firstWeekDay = 0) {
+var Calendar = (function () {
+    function Calendar(firstWeekDay) {
+        if (firstWeekDay === void 0) { firstWeekDay = 0; }
         this.firstWeekDay = firstWeekDay; // 0 = Sunday
     }
-    weekStartDate(date) {
+    Calendar.prototype.weekStartDate = function (date) {
         var startDate = new Date(date.getTime());
         while (startDate.getDay() !== this.firstWeekDay) {
             startDate.setDate(startDate.getDate() - 1);
         }
         return startDate;
-    }
-    monthDates(year, month, dayFormatter = null, weekFormatter = null) {
+    };
+    Calendar.prototype.monthDates = function (year, month, dayFormatter, weekFormatter) {
+        if (dayFormatter === void 0) { dayFormatter = null; }
+        if (weekFormatter === void 0) { weekFormatter = null; }
         if ((typeof year !== "number") || (year < 1970)) {
             throw ('year must be a number >= 1970');
         }
@@ -41,14 +44,14 @@ class Calendar {
             week = [];
         } while ((date.getMonth() <= month) && (date.getFullYear() === year));
         return weeks;
-    }
-    monthDays(year, month) {
+    };
+    Calendar.prototype.monthDays = function (year, month) {
         var getDayOrZero = function getDayOrZero(date) {
             return date.getMonth() === month ? date : 0;
         };
         return this.monthDates(year, month, getDayOrZero);
-    }
-    monthText(year, month) {
+    };
+    Calendar.prototype.monthText = function (year, month) {
         if (typeof year === "undefined") {
             var now = new Date();
             year = now.getFullYear();
@@ -63,10 +66,11 @@ class Calendar {
         };
         var weeks = this.monthDates(year, month, getDayOrBlank, function (week) { return week.join(" "); });
         return weeks.join("\n");
-    }
-}
+    };
+    return Calendar;
+}());
 exports.Calendar = Calendar;
-const months = "JAN FEB MAR APR MAY JUN JUL AUG SEP OCT NOV DEC".split(" ");
+var months = "JAN FEB MAR APR MAY JUN JUL AUG SEP OCT NOV DEC".split(" ");
 for (var i = 0; i < months.length; i++) {
     Calendar[months[i]] = i;
 }
