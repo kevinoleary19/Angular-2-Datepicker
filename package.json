@@ -1,8 +1,9 @@
 {
   "name": "angular2-material-datepicker",
-  "version": "0.2.3-alpha",
+  "version": "0.2.4-alpha",
   "author": "Kevin O'Leary",
   "license": "MIT",
+  "keywords": [ "angular2", "angular 2", "ng2", "datepicker", "material" ],
   "dependencies": {
     "@angular/common": "2.0.0",
     "@angular/compiler": "2.0.0",
