@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, Input, OnInit, Output, Renderer } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output, Renderer,OnChanges } from '@angular/core';
 
 import { Calendar } from './calendar';
 
@@ -272,7 +272,7 @@ import { Calendar } from './calendar';
     </div>
     `
 })
-export class DatepickerComponent implements OnInit {
+export class DatepickerComponent implements OnInit, OnChanges {
   // api bindings
   @Input() accentColor: string;
   @Input() altInputStyle: boolean;
@@ -312,33 +312,41 @@ export class DatepickerComponent implements OnInit {
     this.altInputStyle = false;
     // time
     this.calendar = new Calendar();
-    this.dayNames = [ 'S', 'M', 'T', 'W', 'T', 'F', 'S' ];
+    this.dayNames = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
     this.months = [
-        'January', 'February', 'March', 'April', 'May', 'June', 'July',
-        'August', 'September', 'October', 'November',' December'
+      'January', 'February', 'March', 'April', 'May', 'June', 'July',
+      'August', 'September', 'October', 'November', ' December'
     ];
     // animations
     this.animationListener = null;
     this.animateLeft = false;
     this.animateRight = false;
+
   }
 
-  ngOnInit() {
-    let date;
+  ngOnChanges(){
+    this.setDate();
+  }
+
+  setDate(){
     if (this.date) {
-      date = this.date;
       this.setInputText(this.date);
     } else {
-      date = new Date();
+      this.date = new Date();
     }
 
-    this.currentMonthNumber = date.getMonth();
+    this.currentMonthNumber = this.date.getMonth();
     this.currentMonth = this.months[this.currentMonthNumber];
-    this.currentYear = date.getFullYear();
+    this.currentYear = this.date.getFullYear();
 
     const calendarArray = this.calendar.monthDays(this.currentYear, this.currentMonthNumber);
     this.calendarDays = [].concat.apply([], calendarArray);
   }
+
+  ngOnInit() {
+    this.setDate();
+  }
+
 
   ngOnDestroy() {
     if (this.animationListener) {
