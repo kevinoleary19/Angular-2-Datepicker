@@ -9,6 +9,6 @@
     "removeComments": false,
     "noImplicitAny": false
   },
-  "exclude": [ "app", "node_modules" ],
+  "exclude": [ "node_modules" ],
   "types": [ "es6-shim" ]
 }

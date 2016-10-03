@@ -13,6 +13,7 @@ var AppComponent = (function () {
     function AppComponent() {
         this.show = true;
         this.date = new Date(2014, 5);
+        // setInterval(() => this.date = new Date(2013, Math.round(Math.random()*5)), 2000);
     }
     __decorate([
         core_1.Input(), 
@@ -25,7 +26,7 @@ var AppComponent = (function () {
     AppComponent = __decorate([
         core_1.Component({
             selector: 'my-app',
-            template: "<material-datepicker *ngIf=\"show\"></material-datepicker><button (click)=\"show =! show\">Toggle datepicker</button>"
+            template: "<material-datepicker [date]=\"date\" *ngIf=\"show\"></material-datepicker><button (click)=\"show =! show\">Toggle datepicker</button>"
         }), 
         __metadata('design:paramtypes', [])
     ], AppComponent);

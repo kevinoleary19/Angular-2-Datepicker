@@ -4,10 +4,6 @@ A minimalist datepicker library for Angular 2
 
 ![](https://j.gifs.com/ERwG6l.gif)
 
-### Important!
-
-This library is still in development. I can't guarantee I will not make breaking changes before it reaches a stable release, but the api should be stable.
-
 ### Installation
 ```
 npm install angular2-material-datepicker
@@ -49,12 +45,13 @@ Optional parameters are listed below.
 | `rangeStart` | Date | The beginning boundary for selecting a date. For example, passing in `new Date(2015,2)` will prevent the user from being able to get to February 2015. |
 | `rangeEnd` | Date | Same as `rangeStart`, but for the end boundary. e.g. passing in `new Date()` will prevent the user from being able to get to the next month. |
 
-
 ### CSS
 The css is inlined and autoprefixed to support the last two versions of major browsers as of 2016/9/20
- 
+
+### Animation
+The animation between months uses the angular 2 animation api. Check out [caniuse](http://caniuse.com/#feat=web-animation) to see what the browser compatibility status is for these animations. For incompatible browsers, a polyfill is required. Grab [web-animations.min.js from GitHub](https://github.com/web-animations/web-animations-js) and add it to your page.
+
 ### Todo
-- There is currently a bug where opening and closing the calendar too fast causes an error with an animation listener. Going to create the animation in a more 'angular' way.
 - Add unit tests
 - Possibly make the ranges impact selection on a more granular level by preventing days, not just months, from being selected.
 
