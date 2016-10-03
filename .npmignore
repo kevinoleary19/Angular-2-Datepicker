@@ -1,2 +1,5 @@
-/node_modules
-/app
+app
+node_modules
+index.html
+systemjs.config.js
+**/*.ngfactory.*
