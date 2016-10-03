@@ -1,177 +1,166 @@
-import { Component, ElementRef, EventEmitter, Input, OnInit, Output, Renderer,OnChanges } from '@angular/core';
+import { animate, Component, EventEmitter, Input, keyframes, OnChanges, OnInit,
+         Output, SimpleChange, state, style, transition, trigger } from '@angular/core';
 
 import { Calendar } from './calendar';
 
+
 @Component({
   selector: 'material-datepicker',
+  animations: [
+    trigger('calendarAnimation', [
+      transition('* => left', [
+        animate(180, keyframes([
+          style({transform: 'translateX(105%)', offset: 0.5 }),
+          style({transform: 'translateX(-130%)', offset: 0.51}),
+          style({transform: 'translateX(0)', offset: 1})
+        ]))
+      ]),
+      transition('* => right', [
+        animate(180, keyframes([
+          style({transform: 'translateX(-105%)', offset: 0.5 }),
+          style({transform: 'translateX(130%)', offset: 0.51}),
+          style({transform: 'translateX(0)', offset: 1})
+        ]))
+      ])
+    ])
+  ],
   styles: [
     `.datepicker {
-      position: relative;
-      display: inline-block;
-      color: #2b2b2b;
-      font-family: 'Helvetica Neue', 'Helvetica', 'Arial', 'Calibri', 'Roboto';
-    }
+        position: relative;
+        display: inline-block;
+        color: #2b2b2b;
+        font-family: 'Helvetica Neue', 'Helvetica', 'Arial', 'Calibri', 'Roboto';
+      }
 
-    .datepicker__calendar {
-      font-size: 14px;
-      position: absolute;
-      top: 1.9em;
-      height: 24.25em;
-      width: 20.5em;
-      z-index: 1000;
-      background-color: #ffffff;
-      color: #333333;
-      box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
-      cursor: default;
-      overflow: hidden;
-    }
+      .datepicker__calendar {
+        position: absolute;
+        overflow: hidden;
+        z-index: 1000;
+        top: 1.9em;
+        left: 0;
+        height: 24.25em;
+        width: 20.5em;
+        font-size: 14px;
+        background-color: #ffffff;
+        box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+        cursor: default;
+        -webkit-touch-callout: none;
+          -webkit-user-select: none;
+             -moz-user-select: none;
+              -ms-user-select: none;
+                  user-select: none;
+      }
 
-    .datepicker__calendar__cancel {
-      color: #d8d8d8;
-      cursor: pointer;
-      position: absolute;
-      bottom: 1em;
-      left: 1.8em;
-      -webkit-transition: 0.37s;
-      transition: 0.37s;
-    }
+      .datepicker__calendar__cancel {
+        position: absolute;
+        bottom: 1em;
+        left: 1.8em;
+        color: #d8d8d8;
+        cursor: pointer;
+        -webkit-transition: 0.37s;
+        transition: 0.37s;
+      }
 
-    .datepicker__calendar__cancel:hover {
-      color: #b1b1b1;
-    }
+      .datepicker__calendar__cancel:hover {
+        color: #b1b1b1;
+      }
 
-    .datepicker__calendar__content {
-      display: -webkit-box;
-      display: -ms-flexbox;
-      display: flex;
-      -ms-flex-flow: wrap;
-          flex-flow: wrap;
-      -webkit-box-pack: center;
-         -ms-flex-pack: center;
-       justify-content: center;
-      margin-top: 0.2em;
-    }
+      .datepicker__calendar__content {
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -ms-flex-flow: wrap;
+            flex-flow: wrap;
+        -webkit-box-pack: center;
+           -ms-flex-pack: center;
+         justify-content: center;
+        margin-top: 0.2em;
+      }
 
-    .datepicker__calendar__label {
-      width: 2.2em;
-      height: 2.2em;
-      line-height: 2.2em;
-      display: inline-block;
-      text-align: center;
-      margin: 0.2em;
-      color: #d8d8d8;
-    }
+      .datepicker__calendar__label {
+        display: inline-block;
+        width: 2.2em;
+        height: 2.2em;
+        margin: 0.2em;
+        line-height: 2.2em;
+        text-align: center;
+        color: #d8d8d8;
+      }
 
-    .datepicker__calendar__month {
-      display: -webkit-box;
-      display: -ms-flexbox;
-      display: flex;
-      -ms-flex-flow: wrap;
-          flex-flow: wrap;
-      -webkit-box-pack: center;
-         -ms-flex-pack: center;
-       justify-content: center;
-    }
+      .datepicker__calendar__month {
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -ms-flex-flow: wrap;
+            flex-flow: wrap;
+        -webkit-box-pack: center;
+           -ms-flex-pack: center;
+         justify-content: center;
+      }
 
-    .datepicker__calendar__month--animate-left {
-      -webkit-animation: 0.2s animateMonthLeft;
-              animation: 0.2s animateMonthLeft;
-    }
+      .datepicker__calendar__month__day {
+        display: inline-block;
+        width: 2.2em;
+        height: 2.2em;
+        margin: 0.2em;
+        border-radius: 2.2em;
+        line-height: 2.2em;
+        text-align: center;
+        -webkit-transition: 0.37s;
+        transition: 0.37s;
+      }
 
-    .datepicker__calendar__month--animate-right {
-      -webkit-animation: 0.2s animateMonthRight;
-              animation: 0.2s animateMonthRight;
-    }
+      .datepicker__calendar__nav {
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-pack: center;
+           -ms-flex-pack: center;
+         justify-content: center;
+        -webkit-box-align: center;
+           -ms-flex-align: center;
+              align-items: center;
+        height: 3em;
+        background-color: #fff;
+        border-bottom: 1px solid #e8e8e8;
+      }
 
-    .datepicker__calendar__month__day {
-      width: 2.2em;
-      height: 2.2em;
-      border-radius: 2.2em;
-      line-height: 2.2em;
-      display: inline-block;
-      text-align: center;
-      margin: 0.2em;
+      .datepicker__calendar__nav__arrow {
+        width: 0.8em;
+        height: 0.8em;
+        cursor: pointer;
+        -webkit-transition: 0.37s;
+        transition: 0.37s;
+      }
 
-      -webkit-transition: 0.37s;
+      .datepicker__calendar__nav__arrow:hover {
+        -webkit-transform: scale(1.05);
+                transform: scale(1.05);
+      }
 
-      transition: 0.37s;
-    }
+      .datepicker__calendar__nav__chevron {
+        fill: #bbbbbb;
+        -webkit-transition: 0.37s;
+        transition: 0.37s;
+      }
 
-    .datepicker__calendar__nav {
-      display: -webkit-box;
-      display: -ms-flexbox;
-      display: flex;
-      -webkit-box-pack: center;
-         -ms-flex-pack: center;
-       justify-content: center;
-      -webkit-box-align: center;
-         -ms-flex-align: center;
-            align-items: center;
-      height: 3em;
-      background-color: #fff;
-      border-bottom: 1px solid #e8e8e8;
-    }
+      .datepicker__calendar__nav__chevron:hover {
+        fill: #2b2b2b;
+      }
 
-    .datepicker__calendar__nav__arrow {
-      width: 0.8em;
-      height: 0.8em;
-      cursor: pointer;
-      -webkit-transition: 0.37s;
-      transition: 0.37s;
-    }
+      .datepicker__calendar__nav__header {
+        width: 11em;
+        margin: 0 1em;
+        text-align: center;
+      }
 
-    .datepicker__calendar__nav__arrow:hover {
-      -webkit-transform: scale(1.05);
-              transform: scale(1.05);
-    }
-
-    .datepicker__calendar__nav__chevron {
-      fill: #bbbbbb;
-      -webkit-transition: 0.37s;
-      transition: 0.37s;
-    }
-
-    .datepicker__calendar__nav__chevron:hover {
-      fill: #2b2b2b;
-    }
-
-    .datepicker__calendar__nav__header {
-      width: 11em;
-      margin: 0 1em;
-      text-align: center;
-    }
-
-    .datepicker__input {
-      font-size: 14px;
-      outline: none;
-      border-radius: 0.1rem;
-      padding: .2em .6em;
-    }
-
-    @-webkit-keyframes animateMonthLeft {
-        50%  {
-          -webkit-transform: translateX(105%);
-                  transform: translateX(105%);
-        }
-
-        50.1% {
-          -webkit-transform: translateX(-105%);
-                  transform: translateX(-105%);
-        }
-    }
-
-    @-webkit-keyframes animateMonthRight {
-        50%  {
-          -webkit-transform: translateX(-105%);
-                  transform: translateX(-105%);
-        }
-
-        50.1% {
-          -webkit-transform: translateX(105%);
-                  transform: translateX(105%);
-        }
-    }
-`
+      .datepicker__input {
+        outline: none;
+        border-radius: 0.1rem;
+        padding: .2em .6em;
+        font-size: 14px;
+      }
+    `
   ],
   template: `
     <div
@@ -240,10 +229,8 @@ import { Calendar } from './calendar';
             {{ day }}
           </div>
           <div
-            id="datepicker__calendar__month"
+            [@calendarAnimation]="animate"
             class="datepicker__calendar__month"
-            [ngClass]="{'datepicker__calendar__month--animate-left': animateLeft,
-                        'datepicker__calendar__month--animate-right': animateRight}"
           >
             <div
               *ngFor="let day of calendarDays"
@@ -280,25 +267,28 @@ export class DatepickerComponent implements OnInit, OnChanges {
   @Input() fontFamily: string;
   @Input() rangeStart: Date;
   @Input() rangeEnd: Date;
-  //
-  @Input() animateLeft: boolean;
-  @Input() animateRight: boolean;
+  // data
+  @Input() inputText: string;
+  // view logic
+  @Input() showCalendar: boolean;
+  // events
+  @Output() onSelect = new EventEmitter<Date>();
+  // time
   @Input() calendarDays: Array<number>;
   @Input() currentMonth: string;
   @Input() dayNames: Array<String>;
   @Input() hoveredDay: Date;
-  @Input() inputText: string;
-  @Input() showCalendar: boolean;
-  @Output() onSelect = new EventEmitter<Date>();
-
-  animationListener: any;
   calendar: Calendar;
-  colors: any;
   currentMonthNumber: number;
   currentYear: number;
   months: Array<string>;
+  // animation
+  animate: string;
+  // colors
+  colors: any;
 
-  constructor(private elementRef: ElementRef, private renderer: Renderer) {
+
+  constructor() {
     // view logic
     this.showCalendar = false;
     // colors
@@ -317,17 +307,20 @@ export class DatepickerComponent implements OnInit, OnChanges {
       'January', 'February', 'March', 'April', 'May', 'June', 'July',
       'August', 'September', 'October', 'November', ' December'
     ];
-    // animations
-    this.animationListener = null;
-    this.animateLeft = false;
-    this.animateRight = false;
-
   }
 
-  ngOnChanges(){
+  ngOnInit() {
     this.setDate();
   }
 
+  ngOnChanges(changes: {[propertyName: string]: SimpleChange}) {
+    if (changes['date']) {
+        this.setDate();
+    }
+  }
+
+  // State Management
+  // ------------------------------------------------------------------------------------
   setDate(){
     if (this.date) {
       this.setInputText(this.date);
@@ -341,63 +334,6 @@ export class DatepickerComponent implements OnInit, OnChanges {
 
     const calendarArray = this.calendar.monthDays(this.currentYear, this.currentMonthNumber);
     this.calendarDays = [].concat.apply([], calendarArray);
-  }
-
-  ngOnInit() {
-    this.setDate();
-  }
-
-
-  ngOnDestroy() {
-    if (this.animationListener) {
-        this.removeAnimationListener();
-    }
-  }
-
-  addAnimationListener() {
-    const ele = document.getElementById('datepicker__calendar__month');
-    this.animationListener = this.renderer.listen(ele, 'animationend', event => {
-      this.animateLeft = false;
-      this.animateRight = false;
-    })
-  }
-
-  getDayBackgroundColor(day: Date): string {
-    let color = this.colors['white'];
-    if (this.isChosenDay(day)) {
-      color = this.accentColor;
-    } else if (this.isCurrentDay(day)) {
-      color = this.colors['lightGrey'];
-    }
-    return color;
-  }
-
-  getDayFontColor(day: Date) {
-    let color = this.colors['black'];
-    if (this.isChosenDay(day)) {
-      color = this.colors['white'];
-    }
-    return color;
-  }
-
-  isChosenDay(day: Date): boolean {
-    if (day) {
-      return this.date ? day.toDateString() == this.date.toDateString() : false;
-    } else {
-      return false;
-    }
-  }
-
-  isCurrentDay(day: Date): boolean {
-    if (day) {
-      return day.toDateString() == new Date().toDateString();
-    } else {
-      return false;
-    }
-  }
-
-  isHoveredDay(day: Date): boolean {
-    return this.hoveredDay ? this.hoveredDay == day && !this.isChosenDay(day) : false;
   }
 
   setCurrentMonth(monthNumber: number) {
@@ -426,12 +362,8 @@ export class DatepickerComponent implements OnInit, OnChanges {
     this.inputText = `${date.getFullYear()}/${month}/${day}`;
   }
 
-  removeAnimationListener() {
-    this.animationListener();
-  }
-
   // Click Handlers
-  //------------------------------------------------------------------------------------//
+  // ------------------------------------------------------------------------------------
   onArrowLeftClick() {
     const currentMonth: number = this.currentMonthNumber;
     let newYear: number = this.currentYear;
@@ -449,7 +381,7 @@ export class DatepickerComponent implements OnInit, OnChanges {
       this.currentYear = newYear;
       this.currentMonthNumber = newMonth;
       this.setCurrentMonth(newMonth);
-      this.animateLeft = true;
+      this.triggerAnimation('left');
     }
   }
 
@@ -470,29 +402,67 @@ export class DatepickerComponent implements OnInit, OnChanges {
       this.currentYear = newYear;
       this.currentMonthNumber = newMonth;
       this.setCurrentMonth(newMonth);
-      this.animateRight = true;
+      this.triggerAnimation('right');
     }
   }
 
   onCancel() {
-    this.removeAnimationListener();
     this.showCalendar = false;
   }
 
   onInputClick() {
     this.showCalendar = !this.showCalendar;
-    if (this.showCalendar) {
-      window.setTimeout(() => this.addAnimationListener(), 1000);
-    } else {
-      this.removeAnimationListener();
-    }
   }
 
   onSelectDay(day: Date) {
-    this.removeAnimationListener();
     this.date = day;
     this.setInputText(day);
     this.showCalendar = !this.showCalendar;
     this.onSelect.emit(day);
+  }
+
+  // Helpers
+  // ------------------------------------------------------------------------------------
+  getDayBackgroundColor(day: Date): string {
+    let color = this.colors['white'];
+    if (this.isChosenDay(day)) {
+      color = this.accentColor;
+    } else if (this.isCurrentDay(day)) {
+      color = this.colors['lightGrey'];
+    }
+    return color;
+  }
+
+  getDayFontColor(day: Date): string {
+    let color = this.colors['black'];
+    if (this.isChosenDay(day)) {
+      color = this.colors['white'];
+    }
+    return color;
+  }
+
+  isChosenDay(day: Date): boolean {
+    if (day) {
+      return this.date ? day.toDateString() == this.date.toDateString() : false;
+    } else {
+      return false;
+    }
+  }
+
+  isCurrentDay(day: Date): boolean {
+    if (day) {
+      return day.toDateString() == new Date().toDateString();
+    } else {
+      return false;
+    }
+  }
+
+  isHoveredDay(day: Date): boolean {
+    return this.hoveredDay ? this.hoveredDay == day && !this.isChosenDay(day) : false;
+  }
+
+  triggerAnimation(direction: string) {
+    this.animate = direction;
+    setTimeout(() => this.animate = 'reset', 185);
   }
 }
