@@ -15,6 +15,7 @@ var DatepickerComponent = (function () {
         // events
         this.onSelect = new core_1.EventEmitter();
         // view logic
+        this.initialized = false;
         this.showCalendar = false;
         // colors
         this.colors = {
@@ -34,10 +35,11 @@ var DatepickerComponent = (function () {
         ];
     }
     DatepickerComponent.prototype.ngOnInit = function () {
+        this.initialized = true;
         this.setDate();
     };
     DatepickerComponent.prototype.ngOnChanges = function (changes) {
-        if (changes['date']) {
+        if (changes['date'] && this.initialized) {
             this.setDate();
         }
     };
