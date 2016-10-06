@@ -271,6 +271,7 @@ export class DatepickerComponent implements OnInit, OnChanges {
   @Input() inputText: string;
   // view logic
   @Input() showCalendar: boolean;
+  initialized: boolean;
   // events
   @Output() onSelect = new EventEmitter<Date>();
   // time
@@ -290,6 +291,7 @@ export class DatepickerComponent implements OnInit, OnChanges {
 
   constructor() {
     // view logic
+    this.initialized = false;
     this.showCalendar = false;
     // colors
     this.colors = {
@@ -310,11 +312,12 @@ export class DatepickerComponent implements OnInit, OnChanges {
   }
 
   ngOnInit() {
+    this.initialized = true;
     this.setDate();
   }
 
   ngOnChanges(changes: {[propertyName: string]: SimpleChange}) {
-    if (changes['date']) {
+    if (changes['date'] && this.initialized) {
         this.setDate();
     }
   }
