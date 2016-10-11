@@ -18,7 +18,7 @@ export class Calendar {
         this.firstWeekDay = firstWeekDay; // 0 = Sunday
     }
 
-    weekStartDate(date) {
+    weekStartDate(date: any) {
         var startDate = new Date(date.getTime());
         while (startDate.getDay() !== this.firstWeekDay) {
             startDate.setDate(startDate.getDate() - 1);
@@ -26,15 +26,15 @@ export class Calendar {
         return startDate;
     }
 
-    monthDates(year, month, dayFormatter = null, weekFormatter = null) {
+    monthDates(year: any, month: any, dayFormatter:any = null, weekFormatter:any = null) {
         if ((typeof year !== "number") || (year < 1970)) {
             throw ('year must be a number >= 1970');
         };
         if ((typeof month !== "number") || (month < 0) || (month > 11)) {
             throw ('month must be a number (Jan is 0)');
         };
-        var weeks = [],
-            week = [],
+        var weeks: Array<any> = [],
+            week: Array<any> = [],
             i = 0,
             date = this.weekStartDate(new Date(year, month, 1));
         do {
@@ -49,26 +49,26 @@ export class Calendar {
         return weeks;
     }
 
-    monthDays(year, month) {
-        var getDayOrZero = function getDayOrZero(date) {
+    monthDays(year: any, month: any) {
+        var getDayOrZero = function getDayOrZero(date: any) {
             return date.getMonth() === month ? date : 0;
         };
         return this.monthDates(year, month, getDayOrZero);
     }
 
-    monthText(year, month) {
+    monthText(year: any, month: any) {
         if (typeof year === "undefined") {
             var now = new Date();
             year = now.getFullYear();
             month = now.getMonth();
         };
-        var getDayOrBlank = function getDayOrBlank(date) {
+        var getDayOrBlank = function getDayOrBlank(date: any) {
             var s = date.getMonth() === month ? date.getDate().toString() : "  ";
             while (s.length < 2) s = " "+s;
             return s;
         };
         var weeks = this.monthDates(year, month, getDayOrBlank,
-            function (week) { return week.join(" ") });
+            function (week: any) { return week.join(" ") });
         return weeks.join("\n");
     }
 }

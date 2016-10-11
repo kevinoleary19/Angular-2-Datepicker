@@ -1,6 +1,6 @@
 {
   "name": "angular2-material-datepicker",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "author": "Kevin O'Leary",
   "license": "MIT",
   "keywords": [
@@ -22,9 +22,10 @@
     "@angular/router": "~3.0.1",
     "@types/es6-shim": "^0.31.32",
     "calendar": "^0.1.0",
-    "concurrently": "^2.2.0",
+    "concurrently": "^3.0.0",
     "core-js": "^2.4.1",
     "es6-shim": "^0.35.1",
+    "lite-server": "^2.2.2",
     "reflect-metadata": "^0.1.8",
     "rxjs": "5.0.0-beta.12",
     "systemjs": "0.19.39",
@@ -40,5 +41,11 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/koleary94/Angular-2-Datepicker"
+  },
+  "scripts": {
+    "start": "tsc && concurrently \"tsc -w\" \"lite-server\" ",
+    "lite": "lite-server",
+    "tsc": "tsc",
+    "tsc:w": "tsc -w"
   }
 }

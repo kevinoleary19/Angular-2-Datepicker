@@ -14,6 +14,7 @@ var DatepickerComponent = (function () {
     function DatepickerComponent() {
         // events
         this.onSelect = new core_1.EventEmitter();
+        this.dateFormat = 'YYYY-MM-DD';
         // view logic
         this.initialized = false;
         this.showCalendar = false;
@@ -39,7 +40,7 @@ var DatepickerComponent = (function () {
         this.setDate();
     };
     DatepickerComponent.prototype.ngOnChanges = function (changes) {
-        if (changes['date'] && this.initialized) {
+        if ((changes['date'] || changes['dateFormat']) && this.initialized) {
             this.setDate();
         }
     };
@@ -78,7 +79,22 @@ var DatepickerComponent = (function () {
         if (day.length < 2) {
             day = "0" + day;
         }
-        this.inputText = date.getFullYear() + "/" + month + "/" + day;
+        var inputText;
+        switch (this.dateFormat.toUpperCase()) {
+            case 'YYYY-MM-DD':
+                inputText = date.getFullYear() + "/" + month + "/" + day;
+                break;
+            case 'MM-DD-YYYY':
+                inputText = month + "/" + day + "/" + date.getFullYear();
+                break;
+            case 'DD-MM-YYYY':
+                inputText = day + "/" + month + "/" + date.getFullYear();
+                break;
+            default:
+                inputText = date.getFullYear() + "/" + month + "/" + day;
+                break;
+        }
+        this.inputText = inputText;
     };
     // Click Handlers
     // ------------------------------------------------------------------------------------
@@ -187,6 +203,10 @@ var DatepickerComponent = (function () {
         core_1.Input(), 
         __metadata('design:type', Date)
     ], DatepickerComponent.prototype, "date", void 0);
+    __decorate([
+        core_1.Input(), 
+        __metadata('design:type', String)
+    ], DatepickerComponent.prototype, "dateFormat", void 0);
     __decorate([
         core_1.Input(), 
         __metadata('design:type', String)
