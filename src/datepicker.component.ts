@@ -264,6 +264,7 @@ export class DatepickerComponent implements OnInit, OnChanges {
   @Input() accentColor: string;
   @Input() altInputStyle: boolean;
   @Input() date: Date;
+  @Input() dateFormat: string;
   @Input() fontFamily: string;
   @Input() rangeStart: Date;
   @Input() rangeEnd: Date;
@@ -290,6 +291,7 @@ export class DatepickerComponent implements OnInit, OnChanges {
 
 
   constructor() {
+    this.dateFormat = 'YYYY-MM-DD';
     // view logic
     this.initialized = false;
     this.showCalendar = false;
@@ -317,14 +319,14 @@ export class DatepickerComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: {[propertyName: string]: SimpleChange}) {
-    if (changes['date'] && this.initialized) {
+    if ((changes['date'] || changes['dateFormat']) && this.initialized) {
         this.setDate();
     }
   }
 
   // State Management
   // ------------------------------------------------------------------------------------
-  setDate(){
+  setDate(): void {
     if (this.date) {
       this.setInputText(this.date);
     } else {
@@ -345,15 +347,15 @@ export class DatepickerComponent implements OnInit, OnChanges {
     this.calendarDays = [].concat.apply([], calendarArray);
   }
 
-  setHoveredDay(day: Date) {
+  setHoveredDay(day: Date): void {
     this.hoveredDay = day;
   }
 
-  removeHoveredDay(day: Date) {
+  removeHoveredDay(day: Date): void {
     this.hoveredDay = null;
   }
 
-  setInputText(date: Date) {
+  setInputText(date: Date): void {
     let month: string = (date.getMonth() + 1).toString();
     if (month.length < 2) {
       month = `0${month}`;
@@ -362,12 +364,29 @@ export class DatepickerComponent implements OnInit, OnChanges {
     if (day.length < 2) {
       day = `0${day}`;
     }
-    this.inputText = `${date.getFullYear()}/${month}/${day}`;
+
+    let inputText: string;
+    switch (this.dateFormat.toUpperCase()) {
+      case 'YYYY-MM-DD':
+        inputText = `${date.getFullYear()}/${month}/${day}`;
+        break;
+      case 'MM-DD-YYYY':
+        inputText = `${month}/${day}/${date.getFullYear()}`;
+        break;
+      case 'DD-MM-YYYY':
+        inputText = `${day}/${month}/${date.getFullYear()}`;
+        break;
+      default:
+        inputText = `${date.getFullYear()}/${month}/${day}`;
+        break;
+    }
+
+    this.inputText = inputText;
   }
 
   // Click Handlers
   // ------------------------------------------------------------------------------------
-  onArrowLeftClick() {
+  onArrowLeftClick(): void {
     const currentMonth: number = this.currentMonthNumber;
     let newYear: number = this.currentYear;
     let newMonth: number;
@@ -388,7 +407,7 @@ export class DatepickerComponent implements OnInit, OnChanges {
     }
   }
 
-  onArrowRightClick() {
+  onArrowRightClick(): void {
     const currentMonth: number = this.currentMonthNumber;
     let newYear: number = this.currentYear;
     let newMonth: number;
@@ -409,15 +428,15 @@ export class DatepickerComponent implements OnInit, OnChanges {
     }
   }
 
-  onCancel() {
+  onCancel(): void {
     this.showCalendar = false;
   }
 
-  onInputClick() {
+  onInputClick(): void {
     this.showCalendar = !this.showCalendar;
   }
 
-  onSelectDay(day: Date) {
+  onSelectDay(day: Date): void {
     this.date = day;
     this.setInputText(day);
     this.showCalendar = !this.showCalendar;
@@ -464,7 +483,7 @@ export class DatepickerComponent implements OnInit, OnChanges {
     return this.hoveredDay ? this.hoveredDay == day && !this.isChosenDay(day) : false;
   }
 
-  triggerAnimation(direction: string) {
+  triggerAnimation(direction: string): void {
     this.animate = direction;
     setTimeout(() => this.animate = 'reset', 185);
   }

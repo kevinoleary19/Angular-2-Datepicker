@@ -1,5 +1,7 @@
+aot
 app
-node_modules
 index.html
+node_modules
+npm-debug.log
 systemjs.config.js
 **/*.ngfactory.*
