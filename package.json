@@ -11,14 +11,14 @@
     "material"
   ],
   "devDependencies": {
-    "@angular/common": "~2.0.1",
-    "@angular/compiler": "~2.0.1",
-    "@angular/compiler-cli": "^0.6.3",
-    "@angular/core": "~2.0.1",
-    "@angular/forms": "~2.0.1",
-    "@angular/platform-browser": "~2.0.1",
-    "@angular/platform-browser-dynamic": "~2.0.1",
-    "@angular/platform-server": "^2.0.1",
+    "@angular/common": "~2.1.0",
+    "@angular/compiler": "~2.1.0",
+    "@angular/compiler-cli": "^2.1.0",
+    "@angular/core": "~2.1.0",
+    "@angular/forms": "~2.1.0",
+    "@angular/platform-browser": "~2.1.0",
+    "@angular/platform-browser-dynamic": "~2.1.0",
+    "@angular/platform-server": "~2.1.0",
     "@angular/router": "~3.0.1",
     "@types/es6-shim": "^0.31.32",
     "calendar": "^0.1.0",
@@ -33,10 +33,10 @@
     "zone.js": "^0.6.25"
   },
   "peerDependencies": {
-    "@angular/common": "~2.0.1",
-    "@angular/compiler": "~2.0.1",
-    "@angular/core": "~2.0.1",
-    "@angular/forms": "~2.0.1"
+    "@angular/common": "~2.1.0",
+    "@angular/compiler": "~2.1.0",
+    "@angular/core": "~2.1.0",
+    "@angular/forms": "~2.1.0"
   },
   "repository": {
     "type": "git",
@@ -46,6 +46,7 @@
     "start": "tsc && concurrently \"tsc -w\" \"lite-server\" ",
     "lite": "lite-server",
     "tsc": "tsc",
-    "tsc:w": "tsc -w"
+    "tsc:w": "tsc -w",
+    "ngc": "node_modules/.bin/ngc -p tsconfig-aot.json && rm integration-test/*.metadata.json"
   }
 }
