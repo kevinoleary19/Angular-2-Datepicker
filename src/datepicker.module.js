@@ -11,7 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 function __export(m) {
     for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
 }
-var platform_browser_1 = require('@angular/platform-browser');
+var common_1 = require('@angular/common');
 var forms_1 = require('@angular/forms');
 var core_1 = require('@angular/core');
 var datepicker_component_1 = require('./datepicker.component');
@@ -23,7 +23,7 @@ var DatepickerModule = (function () {
         core_1.NgModule({
             declarations: [datepicker_component_1.DatepickerComponent],
             exports: [datepicker_component_1.DatepickerComponent],
-            imports: [platform_browser_1.BrowserModule, forms_1.FormsModule]
+            imports: [common_1.CommonModule, forms_1.FormsModule]
         }), 
         __metadata('design:paramtypes', [])
     ], DatepickerModule);
