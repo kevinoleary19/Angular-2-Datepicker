@@ -1,5 +1,5 @@
-import { animate, Component, EventEmitter, Input, keyframes, OnChanges, OnInit,
-         Output, SimpleChange, state, style, transition, trigger } from '@angular/core';
+import { animate, Component, ElementRef, EventEmitter, Input, keyframes, OnChanges,
+         OnInit, Output, Renderer, SimpleChange, state, style, transition, trigger } from '@angular/core';
 
 import { Calendar } from './calendar';
 
@@ -237,7 +237,8 @@ import { Calendar } from './calendar';
               class="datepicker__calendar__month__day"
               [ngStyle]="{'cursor': day == 0 ? 'initial' : 'pointer',
                           'background-color': getDayBackgroundColor(day),
-                          'color': isHoveredDay(day) ? accentColor : getDayFontColor(day)
+                          'color': isHoveredDay(day) ? accentColor : getDayFontColor(day),
+                          'pointer-events': day == 0 ? 'none' : ''
                           }"
               (click)="onSelectDay(day)"
               (mouseenter)="hoveredDay = day"
@@ -287,10 +288,12 @@ export class DatepickerComponent implements OnInit, OnChanges {
   // animation
   animate: string;
   // colors
-  colors: any;
+  colors: { [id: string] : string };
+  // listeners
+  clickListener: Function;
 
 
-  constructor() {
+  constructor(private renderer: Renderer, private elementRef: ElementRef) {
     this.dateFormat = 'YYYY-MM-DD';
     // view logic
     this.initialized = false;
@@ -311,6 +314,8 @@ export class DatepickerComponent implements OnInit, OnChanges {
       'January', 'February', 'March', 'April', 'May', 'June', 'July',
       'August', 'September', 'October', 'November', ' December'
     ];
+    // listeners
+    this.clickListener = renderer.listenGlobal('document', 'click', (event: MouseEvent) => this.handleGlobalClick(event));
   }
 
   ngOnInit() {
@@ -324,8 +329,17 @@ export class DatepickerComponent implements OnInit, OnChanges {
     }
   }
 
+  ngOnDestroy() {
+    this.clickListener();
+  }
+
   // State Management
   // ------------------------------------------------------------------------------------
+  closeCalendar(): void {
+    this.showCalendar = false;
+    this.setDate();
+  }
+
   setDate(): void {
     if (this.date) {
       this.setInputText(this.date);
@@ -429,7 +443,7 @@ export class DatepickerComponent implements OnInit, OnChanges {
   }
 
   onCancel(): void {
-    this.showCalendar = false;
+    this.closeCalendar();
   }
 
   onInputClick(): void {
@@ -441,6 +455,14 @@ export class DatepickerComponent implements OnInit, OnChanges {
     this.setInputText(day);
     this.showCalendar = !this.showCalendar;
     this.onSelect.emit(day);
+  }
+
+  // Listeners
+  // ------------------------------------------------------------------------------------
+  handleGlobalClick(event: MouseEvent): void {
+    if (!this.elementRef.nativeElement.contains(event.target)) {
+      this.closeCalendar();
+    }
   }
 
   // Helpers
