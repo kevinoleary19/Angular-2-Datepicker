@@ -1,5 +1,7 @@
-import { animate, Component, ElementRef, EventEmitter, Input, keyframes, OnChanges,
-         OnInit, Output, Renderer, SimpleChange, state, style, transition, trigger } from '@angular/core';
+import {
+  animate, Component, ElementRef, EventEmitter, Input, keyframes, OnChanges,
+  OnInit, Output, Renderer, SimpleChange, state, style, transition, trigger
+} from '@angular/core';
 
 import { Calendar } from './calendar';
 
@@ -10,16 +12,16 @@ import { Calendar } from './calendar';
     trigger('calendarAnimation', [
       transition('* => left', [
         animate(180, keyframes([
-          style({transform: 'translateX(105%)', offset: 0.5 }),
-          style({transform: 'translateX(-130%)', offset: 0.51}),
-          style({transform: 'translateX(0)', offset: 1})
+          style({ transform: 'translateX(105%)', offset: 0.5 }),
+          style({ transform: 'translateX(-130%)', offset: 0.51 }),
+          style({ transform: 'translateX(0)', offset: 1 })
         ]))
       ]),
       transition('* => right', [
         animate(180, keyframes([
-          style({transform: 'translateX(-105%)', offset: 0.5 }),
-          style({transform: 'translateX(130%)', offset: 0.51}),
-          style({transform: 'translateX(0)', offset: 1})
+          style({ transform: 'translateX(-105%)', offset: 0.5 }),
+          style({ transform: 'translateX(130%)', offset: 0.51 }),
+          style({ transform: 'translateX(0)', offset: 1 })
         ]))
       ])
     ])
@@ -168,7 +170,9 @@ import { Calendar } from './calendar';
       [ngStyle]="{'font-family': fontFamily}"
     >
       <input
+        [disabled]="disabled"
         class="datepicker__input"
+        [placeholder]="placeholder"
         [ngStyle]="{'color': altInputStyle ? colors['white'] : colors['black'],
                     'background-color': altInputStyle ? accentColor : colors['white'],
                     'border': altInputStyle ? '' : '1px solid #dadada'}"
@@ -261,19 +265,31 @@ import { Calendar } from './calendar';
     `
 })
 export class DatepickerComponent implements OnInit, OnChanges {
+
+  private dateVal: Date;
+
+  // two way bindings
+  @Output() dateChange = new EventEmitter<Date>();
+
+  @Input() get date(): Date { return this.dateVal; };
+  set date(val: Date) {
+    this.dateVal = val;
+    this.dateChange.emit(val);
+  }
+
   // api bindings
+  @Input() disabled: boolean;
   @Input() accentColor: string;
   @Input() altInputStyle: boolean;
-  @Input() date: Date;
   @Input() dateFormat: string;
   @Input() fontFamily: string;
   @Input() rangeStart: Date;
   @Input() rangeEnd: Date;
   // data
+  @Input() placeholder: string = 'Select a date';
   @Input() inputText: string;
   // view logic
   @Input() showCalendar: boolean;
-  initialized: boolean;
   // events
   @Output() onSelect = new EventEmitter<Date>();
   // time
@@ -288,7 +304,7 @@ export class DatepickerComponent implements OnInit, OnChanges {
   // animation
   animate: string;
   // colors
-  colors: { [id: string] : string };
+  colors: { [id: string]: string };
   // listeners
   clickListener: Function;
 
@@ -296,7 +312,6 @@ export class DatepickerComponent implements OnInit, OnChanges {
   constructor(private renderer: Renderer, private elementRef: ElementRef) {
     this.dateFormat = 'YYYY-MM-DD';
     // view logic
-    this.initialized = false;
     this.showCalendar = false;
     // colors
     this.colors = {
@@ -319,13 +334,12 @@ export class DatepickerComponent implements OnInit, OnChanges {
   }
 
   ngOnInit() {
-    this.initialized = true;
     this.setDate();
   }
 
-  ngOnChanges(changes: {[propertyName: string]: SimpleChange}) {
-    if ((changes['date'] || changes['dateFormat']) && this.initialized) {
-        this.setDate();
+  ngOnChanges(changes: { [propertyName: string]: SimpleChange }) {
+    if ((changes['date'] || changes['dateFormat'])) {
+      this.setDate();
     }
   }
 
@@ -340,19 +354,23 @@ export class DatepickerComponent implements OnInit, OnChanges {
     this.setDate();
   }
 
+  private setCurrentValues(date: Date) {
+    this.currentMonthNumber = date.getMonth();
+    this.currentMonth = this.months[this.currentMonthNumber];
+    this.currentYear = date.getFullYear();
+    const calendarArray = this.calendar.monthDays(this.currentYear, this.currentMonthNumber);
+    this.calendarDays = [].concat.apply([], calendarArray);
+  }
+
   setDate(): void {
     if (this.date) {
       this.setInputText(this.date);
-    } else {
-      this.date = new Date();
+      this.setCurrentValues(this.date);
     }
-
-    this.currentMonthNumber = this.date.getMonth();
-    this.currentMonth = this.months[this.currentMonthNumber];
-    this.currentYear = this.date.getFullYear();
-
-    const calendarArray = this.calendar.monthDays(this.currentYear, this.currentMonthNumber);
-    this.calendarDays = [].concat.apply([], calendarArray);
+    else {
+      this.inputText = '';
+      this.setCurrentValues(new Date());
+    }
   }
 
   setCurrentMonth(monthNumber: number) {
@@ -452,9 +470,8 @@ export class DatepickerComponent implements OnInit, OnChanges {
 
   onSelectDay(day: Date): void {
     this.date = day;
-    this.setInputText(day);
-    this.showCalendar = !this.showCalendar;
     this.onSelect.emit(day);
+    this.showCalendar = !this.showCalendar;
   }
 
   // Listeners
