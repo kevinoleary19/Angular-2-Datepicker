@@ -27,12 +27,12 @@ import { DatepickerModule as YourAlias } from 'angular2-material-datepicker'
 ```
 Call the component from within a template
 ```
-<material-datepicker></material-datepicker>
+<material-datepicker [(date)]="yourModelDate"></material-datepicker>
 ```
 and you're set!
 
 ### API
-The datepicker component can be called with no arguments. See the [Angular 2 Documentation](https://angular.io/docs/ts/latest/cookbook/component-communication.html) for how to communicate with child components. If you use an event emitter, the datepicker component has an emitter called `onSelect`.
+The datepicker component can be called with no arguments. See the [Angular 2 Documentation](https://angular.io/docs/ts/latest/cookbook/component-communication.html) for how to communicate with child components. If you use an event emitter, the datepicker component has an emitter called `onSelect` (when the date is picked), and `dateChange` (for two-way binding).
 
 Optional parameters are listed below.
 
@@ -40,6 +40,8 @@ Optional parameters are listed below.
 |---|---|---|
 | `accentColor` | string  | Replaces the default blue accent color  |
 |`altInputStyle` | boolean | If `true`, changes the input styling to primarily use the accent color |
+|`disabled` | boolean | If `true`, adds "disabled" attribute to input |
+|`placeholder` | string | This text will be shown if the date is empty |
 | `date` | Date | The source of truth for the selected date. If passed, the date will automatically be displayed in the input field and clicking on the input field will bring up the respective month. |
 | `dateFormat` | string | By default, the date will be shown in `YYYY-MM-DD` (ISO 8601 standard). Other formats include `MM-DD-YYYY` and `DD-MM-YYYY`. This string is *not* case sensitive. |
 | `fontFamily` | string | By default, the element will use `'Helvetica Neue', 'Helvetica', 'Arial', 'Calibri', 'Roboto'` in that order. Passing in this value will override these defaults.|

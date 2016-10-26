@@ -4,16 +4,37 @@ import { Component, Input } from '@angular/core';
   selector: 'my-app',
   template: `
       <material-datepicker
-        [date]="date"
-        dateFormat="mm-dd-yyyy"
+        [(date)]="date"
+        (onSelect)="onSelect($event)"
+        dateFormat="YYYY-MM-DD"
       ></material-datepicker>
+
+      <button (click)="setToday()">today</button>
+      <button (click)="clearDate()">reset</button>
+      <hr>
+      {{ date }}
+      <p>
+      Mirror(disabled, DD-MM-YYYY):
+      <material-datepicker
+        placeholder="nothing is selected"
+        disabled="true"
+        [(date)]="date"
+        dateFormat="DD-MM-YYYY"
+      ></material-datepicker>
+
     `
 })
 export class AppComponent {
-  @Input() date: Date;
+  date: Date;
+  disabled: boolean;
 
-  constructor() {
+  onSelect(date: Date) {
+    console.log("onSelect: ", date);
+  }
+  clearDate() {
+    this.date = null;
+  }
+  setToday() {
     this.date = new Date();
-    setTimeout(this.date = new Date(2016, 8), 3000);
   }
 }
