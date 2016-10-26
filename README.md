@@ -40,11 +40,11 @@ Optional parameters are listed below.
 |---|---|---|
 | `accentColor` | string  | Replaces the default blue accent color  |
 |`altInputStyle` | boolean | If `true`, changes the input styling to primarily use the accent color |
-|`disabled` | boolean | If `true`, adds "disabled" attribute to input |
-|`placeholder` | string | This text will be shown if the date is empty |
 | `date` | Date | The source of truth for the selected date. If passed, the date will automatically be displayed in the input field and clicking on the input field will bring up the respective month. |
 | `dateFormat` | string | By default, the date will be shown in `YYYY-MM-DD` (ISO 8601 standard). Other formats include `MM-DD-YYYY` and `DD-MM-YYYY`. This string is *not* case sensitive. |
+|`disabled` | boolean | If `true`, adds "disabled" attribute to input |
 | `fontFamily` | string | By default, the element will use `'Helvetica Neue', 'Helvetica', 'Arial', 'Calibri', 'Roboto'` in that order. Passing in this value will override these defaults.|
+|`placeholder` | string | This text will be shown if the date is empty |
 | `rangeStart` | Date | The beginning boundary for selecting a date. For example, passing in `new Date(2015,2)` will prevent the user from being able to get to February 2015. |
 | `rangeEnd` | Date | Same as `rangeStart`, but for the end boundary. e.g. passing in `new Date()` will prevent the user from being able to get to the next month. |
 
