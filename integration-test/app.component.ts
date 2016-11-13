@@ -21,12 +21,19 @@ import { Component, Input } from '@angular/core';
         [(date)]="date"
         dateFormat="DD-MM-YYYY"
       ></material-datepicker>
-
+      <button (click)="onClick()">
+        Press me
+      </button>
     `
 })
 export class AppComponent {
   date: Date;
   disabled: boolean;
+  toggle: boolean = true;
+
+  onClick() {
+    this.toggle = !this.toggle;
+  }
 
   onSelect(date: Date) {
     console.log("onSelect: ", date);

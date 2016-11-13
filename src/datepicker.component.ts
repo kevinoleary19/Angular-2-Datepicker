@@ -1,6 +1,7 @@
 import {
-  animate, Component, ElementRef, EventEmitter, Input, keyframes, OnChanges,
-  OnInit, Output, Renderer, SimpleChange, state, style, transition, trigger
+  animate, ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input,
+  keyframes, OnChanges, OnInit, Output, Renderer, SimpleChange, state, style,
+  transition, trigger
 } from '@angular/core';
 
 import { Calendar } from './calendar';
@@ -8,6 +9,7 @@ import { Calendar } from './calendar';
 
 @Component({
   selector: 'material-datepicker',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
     trigger('calendarAnimation', [
       transition('* => left', [
@@ -271,7 +273,7 @@ export class DatepickerComponent implements OnInit, OnChanges {
   // two way bindings
   @Output() dateChange = new EventEmitter<Date>();
 
-  @Input() get date(): Date { return this.dateVal; };
+  @Input() get date(): Date { console.log('hit'); return this.dateVal; };
   set date(val: Date) {
     this.dateVal = val;
     this.dateChange.emit(val);
