@@ -7,6 +7,7 @@ import { Component, Input } from '@angular/core';
         [(date)]="date"
         (onSelect)="onSelect($event)"
         dateFormat="YYYY-MM-DD"
+        [rangeEnd]="testRangeDate"
       ></material-datepicker>
 
       <button (click)="setToday()">today</button>
@@ -27,6 +28,11 @@ import { Component, Input } from '@angular/core';
 export class AppComponent {
   date: Date;
   disabled: boolean;
+  @Input() testRangeDate: Date;
+
+  constructor() {
+    this.testRangeDate = new Date();
+  }
 
   onSelect(date: Date) {
     console.log("onSelect: ", date);
