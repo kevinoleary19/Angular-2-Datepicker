@@ -1,6 +1,7 @@
 aot
 app
 index.html
+integration-test
 node_modules
 npm-debug.log
 systemjs.config.js

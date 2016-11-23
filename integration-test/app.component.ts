@@ -20,7 +20,7 @@ import { Component, Input } from '@angular/core';
         placeholder="nothing is selected"
         disabled="true"
         [(date)]="date"
-        dateFormat="DD-MM-YYYY"
+        [dateFormat]="formatDate"
       ></material-datepicker>
 
     `
@@ -32,6 +32,10 @@ export class AppComponent {
 
   constructor() {
     this.testRangeDate = new Date();
+  }
+
+  formatDate(date: Date): string {
+    return date.toLocaleString();
   }
 
   onSelect(date: Date) {

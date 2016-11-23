@@ -41,7 +41,7 @@ Optional parameters are listed below.
 | `accentColor` | string  | Replaces the default blue accent color  |
 |`altInputStyle` | boolean | If `true`, changes the input styling to primarily use the accent color |
 | `date` | Date | The source of truth for the selected date. If passed, the date will automatically be displayed in the input field and clicking on the input field will bring up the respective month. |
-| `dateFormat` | string | By default, the date will be shown in `YYYY-MM-DD` (ISO 8601 standard). Other formats include `MM-DD-YYYY` and `DD-MM-YYYY`. This string is *not* case sensitive. |
+| `dateFormat` | string or function | By default, the date will be shown in `YYYY-MM-DD` (ISO 8601 standard). Other formats include `MM-DD-YYYY` and `DD-MM-YYYY`. If you pass in a string, it is *not* case sensitive. You can also pass in a function to create the string yourself, which must be of the type `(date: Date): string`. |
 |`disabled` | boolean | If `true`, adds "disabled" attribute to input |
 | `fontFamily` | string | By default, the element will use `'Helvetica Neue', 'Helvetica', 'Arial', 'Calibri', 'Roboto'` in that order. Passing in this value will override these defaults.|
 |`placeholder` | string | This text will be shown if the date is empty |

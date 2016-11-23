@@ -6,6 +6,10 @@ import { FormControl, Validators } from '@angular/forms';
 
 import { Calendar } from './calendar';
 
+interface DateFormatFunction {
+  (date: Date): string;
+}
+
 interface ValidationResult {
   [key:string]: boolean;
 }
@@ -321,7 +325,7 @@ export class DatepickerComponent implements OnInit, OnChanges {
   @Input() disabled: boolean;
   @Input() accentColor: string;
   @Input() altInputStyle: boolean;
-  @Input() dateFormat: string;
+  @Input() dateFormat: string | DateFormatFunction;
   @Input() fontFamily: string;
   @Input() rangeStart: Date;
   @Input() rangeEnd: Date;
@@ -480,20 +484,25 @@ export class DatepickerComponent implements OnInit, OnChanges {
       day = `0${day}`;
     }
     // transforms input text into appropiate date format
-    let inputText: string;
-    switch (this.dateFormat.toUpperCase()) {
-      case 'YYYY-MM-DD':
-        inputText = `${date.getFullYear()}/${month}/${day}`;
-        break;
-      case 'MM-DD-YYYY':
-        inputText = `${month}/${day}/${date.getFullYear()}`;
-        break;
-      case 'DD-MM-YYYY':
-        inputText = `${day}/${month}/${date.getFullYear()}`;
-        break;
-      default:
-        inputText = `${date.getFullYear()}/${month}/${day}`;
-        break;
+    let inputText: string = '';
+    const dateFormat: string | DateFormatFunction = this.dateFormat;
+    if (typeof dateFormat === "string") {
+      switch (dateFormat.toUpperCase()) {
+        case 'YYYY-MM-DD':
+          inputText = `${date.getFullYear()}/${month}/${day}`;
+          break;
+        case 'MM-DD-YYYY':
+          inputText = `${month}/${day}/${date.getFullYear()}`;
+          break;
+        case 'DD-MM-YYYY':
+          inputText = `${day}/${month}/${date.getFullYear()}`;
+          break;
+        default:
+          inputText = `${date.getFullYear()}/${month}/${day}`;
+          break;
+      }
+    } else if (typeof dateFormat === "function") {
+      inputText = dateFormat(date);
     }
 
     this.inputText = inputText;
