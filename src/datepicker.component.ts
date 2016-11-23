@@ -413,9 +413,9 @@ export class DatepickerComponent implements OnInit, OnChanges {
   //-------------------------------- ControlValueAccessor ----------------------------//
   //----------------------------------------------------------------------------------//
   /**
-  * To act like a native input
+  * To act like a normal input
   */
-  registerOnChange(fn) {
+  registerOnChange(fn: any) {
     this.propagateChange = fn;
   }
   registerOnTouched(fn: any) { this.onTouched = fn; }
