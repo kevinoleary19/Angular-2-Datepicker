@@ -1,11 +1,12 @@
 import { Component, Input } from '@angular/core';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'my-app',
   template: `
       <material-datepicker
-        [(date)]="date"
         (onSelect)="onSelect($event)"
+        [formControl]="dateControl"
         dateFormat="YYYY-MM-DD"
         [rangeEnd]="testRangeDate"
       ></material-datepicker>
@@ -13,20 +14,21 @@ import { Component, Input } from '@angular/core';
       <button (click)="setToday()">today</button>
       <button (click)="clearDate()">reset</button>
       <hr>
-      {{ date }}
+      {{ dateControl.value }}
       <p>
       Mirror(disabled, DD-MM-YYYY):
       <material-datepicker
+      [formControl]="dateControl"
         placeholder="nothing is selected"
         disabled="true"
-        [(date)]="date"
         [dateFormat]="formatDate"
       ></material-datepicker>
 
     `
 })
 export class AppComponent {
-  date: Date;
+  date = new Date();
+  dateControl = new FormControl(this.date);
   disabled: boolean;
   @Input() testRangeDate: Date;
 
@@ -42,9 +44,9 @@ export class AppComponent {
     console.log("onSelect: ", date);
   }
   clearDate() {
-    this.date = null;
+    this.dateControl.reset();
   }
   setToday() {
-    this.date = new Date();
+    this.dateControl.setValue(new Date());
   }
 }
