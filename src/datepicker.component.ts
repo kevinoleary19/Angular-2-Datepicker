@@ -1,9 +1,14 @@
 import {
   animate, Component, ElementRef, EventEmitter, Input, keyframes, OnChanges,
-  OnInit, Output, Renderer, SimpleChange, state, style, transition, trigger
+  OnInit, Output, Renderer, SimpleChange, state, style, transition, trigger,
+  forwardRef, HostListener
 } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
-
+import { FormControl, Validators, NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
+export const DATETIME_VALUE_ACCESSOR: any = {
+  provide: NG_VALUE_ACCESSOR,
+  useExisting: forwardRef(() => DatepickerComponent),
+  multi: true
+};
 import { Calendar } from './calendar';
 
 interface DateFormatFunction {
@@ -11,11 +16,12 @@ interface DateFormatFunction {
 }
 
 interface ValidationResult {
-  [key:string]: boolean;
+  [key: string]: boolean;
 }
 
 @Component({
   selector: 'material-datepicker',
+  providers: [DATETIME_VALUE_ACCESSOR],
   animations: [
     trigger('calendarAnimation', [
       transition('* => left', [
@@ -316,8 +322,7 @@ export class DatepickerComponent implements OnInit, OnChanges {
   // two way bindings
   @Output() dateChange = new EventEmitter<Date>();
 
-  @Input() get date(): Date { return this.dateVal; };
-  set date(val: Date) {
+  writeValue(val: any) {
     this.dateVal = val;
     this.dateChange.emit(val);
   }
@@ -353,7 +358,8 @@ export class DatepickerComponent implements OnInit, OnChanges {
   clickListener: Function;
   // forms
   yearControl: FormControl;
-
+  // control value accessor
+  propagateChange = (_: any) => { };
 
   constructor(private renderer: Renderer, private elementRef: ElementRef) {
     this.dateFormat = 'YYYY-MM-DD';
@@ -403,7 +409,17 @@ export class DatepickerComponent implements OnInit, OnChanges {
   ngOnDestroy() {
     this.clickListener();
   }
-
+  //----------------------------------------------------------------------------------//
+  //-------------------------------- ControlValueAccessor ----------------------------//
+  //----------------------------------------------------------------------------------//
+  /**
+  * To act like a native input
+  */
+  registerOnChange(fn) {
+    this.propagateChange = fn;
+  }
+  registerOnTouched(fn: any) { this.onTouched = fn; }
+  onTouched() { }
   //----------------------------------------------------------------------------------//
   //-------------------------------- State Management --------------------------------//
   //----------------------------------------------------------------------------------//
@@ -434,9 +450,9 @@ export class DatepickerComponent implements OnInit, OnChanges {
   * Visually syncs calendar and input to selected date or current day
   */
   syncVisualsWithDate(): void {
-    if (this.date) {
-      this.setInputText(this.date);
-      this.setCurrentValues(this.date);
+    if (this.dateVal) {
+      this.setInputText(this.dateVal);
+      this.setCurrentValues(this.dateVal);
     }
     else {
       this.inputText = '';
@@ -567,7 +583,9 @@ export class DatepickerComponent implements OnInit, OnChanges {
   * Returns the font color for a day
   */
   onSelectDay(day: Date): void {
-    this.date = day;
+    this.propagateChange(day)
+    this.dateVal = day;
+    this.setInputText(day)
     this.onSelect.emit(day);
     this.showCalendar = !this.showCalendar;
   }
@@ -622,7 +640,7 @@ export class DatepickerComponent implements OnInit, OnChanges {
   */
   isChosenDay(day: Date): boolean {
     if (day) {
-      return this.date ? day.toDateString() == this.date.toDateString() : false;
+      return this.dateVal ? day.toDateString() == this.dateVal.toDateString() : false;
     } else {
       return false;
     }
@@ -683,5 +701,5 @@ export class DatepickerComponent implements OnInit, OnChanges {
       return null;
     }
     return { "invalidYear": true };
-	}
+  }
 }
