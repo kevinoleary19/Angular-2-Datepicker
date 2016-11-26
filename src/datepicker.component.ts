@@ -11,7 +11,7 @@ interface DateFormatFunction {
 }
 
 interface ValidationResult {
-  [key:string]: boolean;
+  [key: string]: boolean;
 }
 
 @Component({
@@ -385,7 +385,7 @@ export class DatepickerComponent implements OnInit, OnChanges {
     this.yearControl = new FormControl('', Validators.compose([
       Validators.required,
       Validators.maxLength(4),
-      this.positiveIntegerValidator,
+      this.yearValidator,
       this.inRangeValidator.bind(this)
     ]));
   }
@@ -417,6 +417,7 @@ export class DatepickerComponent implements OnInit, OnChanges {
     this.showCalendar = false;
     this.syncVisualsWithDate();
   }
+
   /**
   * Sets the date values associated with the ui
   */
@@ -437,12 +438,12 @@ export class DatepickerComponent implements OnInit, OnChanges {
     if (this.date) {
       this.setInputText(this.date);
       this.setCurrentValues(this.date);
-    }
-    else {
+    } else {
       this.inputText = '';
       this.setCurrentValues(new Date());
     }
   }
+
   /**
   * Sets the currentMonth and creates new calendar days for the given month
   */
@@ -451,6 +452,7 @@ export class DatepickerComponent implements OnInit, OnChanges {
     const calendarArray = this.calendar.monthDays(this.currentYear, this.currentMonthNumber);
     this.calendarDays = [].concat.apply([], calendarArray);
   }
+
   /**
   * Sets the currentYear and FormControl value associated with the year
   */
@@ -458,28 +460,17 @@ export class DatepickerComponent implements OnInit, OnChanges {
     this.currentYear = year;
     this.yearControl.setValue(year);
   }
-  /**
-  * Sets hoveredDay to given day
-  */
-  setHoveredDay(day: Date): void {
-    this.hoveredDay = day;
-  }
-  /**
-  * Resets hoveredDay back to none
-  */
-  removeHoveredDay(day: Date): void {
-    this.hoveredDay = null;
-  }
+
   /**
   * Sets the visible input text
   */
   setInputText(date: Date): void {
     let month: string = (date.getMonth() + 1).toString();
+    // always prefixes one digit numbers with a 0
     if (month.length < 2) {
       month = `0${month}`;
     }
     let day: string = (date.getDate()).toString();
-    // always prefixes one digit days with a 0
     if (day.length < 2) {
       day = `0${day}`;
     }
@@ -507,6 +498,7 @@ export class DatepickerComponent implements OnInit, OnChanges {
 
     this.inputText = inputText;
   }
+
   //----------------------------------------------------------------------------------//
   //--------------------------------- Click Handlers ---------------------------------//
   //----------------------------------------------------------------------------------//
@@ -551,18 +543,21 @@ export class DatepickerComponent implements OnInit, OnChanges {
       this.triggerAnimation(direction);
     }
   }
+
   /**
   * Closes the calendar when the cancel button is clicked
   */
   onCancel(): void {
     this.closeCalendar();
   }
+
   /**
   * Toggles the calendar when the date input is clicked
   */
   onInputClick(): void {
     this.showCalendar = !this.showCalendar;
   }
+
   /**
   * Returns the font color for a day
   */
@@ -572,6 +567,10 @@ export class DatepickerComponent implements OnInit, OnChanges {
     this.showCalendar = !this.showCalendar;
   }
 
+  /**
+  * Sets the current year and current month if the year from
+  * yearControl is valid
+  */
   onYearSubmit(): void {
     if (this.yearControl.valid && this.yearControl.value != this.currentYear) {
       this.setCurrentYear(+this.yearControl.value);
@@ -580,6 +579,7 @@ export class DatepickerComponent implements OnInit, OnChanges {
       this.yearControl.setValue(this.currentYear);
     }
   }
+
   //----------------------------------------------------------------------------------//
   //----------------------------------- Listeners ------------------------------------//
   //----------------------------------------------------------------------------------//
@@ -592,6 +592,7 @@ export class DatepickerComponent implements OnInit, OnChanges {
       this.closeCalendar();
     }
   }
+
   //----------------------------------------------------------------------------------//
   //------------------------------------ Helpers -------------------------------------//
   //----------------------------------------------------------------------------------//
@@ -607,6 +608,7 @@ export class DatepickerComponent implements OnInit, OnChanges {
     }
     return color;
   }
+
   /**
   * Returns the font color for a day
   */
@@ -617,32 +619,36 @@ export class DatepickerComponent implements OnInit, OnChanges {
     }
     return color;
   }
+
   /**
   * Returns whether a day is the chosen day
   */
   isChosenDay(day: Date): boolean {
     if (day) {
-      return this.date ? day.toDateString() == this.date.toDateString() : false;
+      return this.date ? day.toDateString() === this.date.toDateString() : false;
     } else {
       return false;
     }
   }
+
   /**
   * Returns whether a day is the current calendar day
   */
   isCurrentDay(day: Date): boolean {
     if (day) {
-      return day.toDateString() == new Date().toDateString();
+      return day.toDateString() === new Date().toDateString();
     } else {
       return false;
     }
   }
+
   /**
   * Returns whether a day is the day currently being hovered
   */
   isHoveredDay(day: Date): boolean {
     return this.hoveredDay ? this.hoveredDay == day && !this.isChosenDay(day) : false;
   }
+
   /**
   * Triggers an animation and resets to initial state after the duration of the animation
   */
@@ -650,33 +656,34 @@ export class DatepickerComponent implements OnInit, OnChanges {
     this.animate = direction;
     setTimeout(() => this.animate = 'reset', 185);
   }
+
   //----------------------------------------------------------------------------------//
   //----------------------------------- Validators -----------------------------------//
   //----------------------------------------------------------------------------------//
   /**
   * Validates that a value is within the 'rangeStart' and/or 'rangeEnd' if specified
   */
-  private inRangeValidator(control: FormControl): ValidationResult {
-    const error = { "invalidYear": true };
+  inRangeValidator(control: FormControl): ValidationResult {
     const value = control.value;
 
     if (this.currentMonthNumber) {
       const tentativeDate = new Date(+value, this.currentMonthNumber);
-      if (this.rangeStart && this.rangeStart.getTime() > tentativeDate.getTime()) {
-        return error;
+      if (this.rangeStart && tentativeDate.getTime() < this.rangeStart.getTime()) {
+        return { "yearBeforeRangeStart": true };
       }
       if (this.rangeEnd && tentativeDate.getTime() > this.rangeEnd.getTime()) {
-        return error;
+        return { "yearAfterRangeEnd": true };
       }
       return null;
     }
 
-    return error;
+    return { "currentMonthMissing": true };
   }
+
   /**
   * Validates that a value is a number greater than or equal to 1970
   */
-  private positiveIntegerValidator(control: FormControl): ValidationResult {
+  yearValidator(control: FormControl): ValidationResult {
     const value = control.value;
     const valid = !isNaN(value) && value >= 1970 && Math.floor(value) === +value;
     if (valid) {

@@ -10,5 +10,5 @@
     "noImplicitAny": false
   },
   "exclude": [ "node_modules", "**/*.ngfactory.*" ],
-  "types": [ "es6-shim" ]
+  "types": [ "es6-shim", "jasmine" ]
 }
