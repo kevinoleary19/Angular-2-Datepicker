@@ -1,8 +1,11 @@
+**/*.ngfactory.*
 aot
-app
+demo
 index.html
 integration-test
+karma.conf.js
+karma-test-shim.js
 node_modules
 npm-debug.log
+src/main.*
 systemjs.config.js
-**/*.ngfactory.*

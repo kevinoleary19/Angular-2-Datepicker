@@ -1,5 +1,9 @@
 # Angular 2 Material Datepicker
 
+[![Version](http://img.shields.io/npm/v/angular2-material-datepicker.svg)](https://www.npmjs.org/package/angular2-material-datepicker)
+[![BuildStatus](https://travis-ci.org/koleary94/Angular-2-Datepicker.svg?branch=master)](https://travis-ci.org/koleary94/Angular-2-Datepicker)
+[![CodeClimate](https://codeclimate.com/github/koleary94/Angular-2-Datepicker/badges/gpa.svg)](https://codeclimate.com/github/koleary94/Angular-2-Datepicker)
+
 A minimalist datepicker library for Angular 2
 
 ![](https://j.gifs.com/ERwG6l.gif)
@@ -55,7 +59,6 @@ The css is inlined and autoprefixed to support the last two versions of major br
 The animation between months uses the angular 2 animation api. Check out [caniuse](http://caniuse.com/#feat=web-animation) to see what the browser compatibility status is for these animations. For incompatible browsers, a polyfill is required. Grab [web-animations.min.js from GitHub](https://github.com/web-animations/web-animations-js) and add it to your page.
 
 ### Todo
-- Add unit tests
 - Possibly make the ranges impact selection on a more granular level by preventing days, not just months, from being selected.
 
 ### License

@@ -1,16 +1,3 @@
-/*!
- * calendar: a port of the calendar module from Python
- * Copyright(c) 2011 Luciano Ramalho <luciano@ramalho.org>
- * MIT Licensed
- */
-
-// const CalendarException = message => {
-//    this.message = message;
-//    this.toString = function() {
-//        return this.message
-//    };
-// }
-
 export class Calendar {
     firstWeekDay: number;
 
@@ -77,3 +64,9 @@ const months = "JAN FEB MAR APR MAY JUN JUL AUG SEP OCT NOV DEC".split(" ");
 for (var i=0; i<months.length; i++) {
     Calendar[months[i]] = i;
 }
+
+/*!
+ * calendar: a port of the calendar module from Python
+ * Copyright(c) 2011 Luciano Ramalho <luciano@ramalho.org>
+ * MIT Licensed
+ */
