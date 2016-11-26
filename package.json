@@ -1,6 +1,6 @@
 {
   "name": "angular2-material-datepicker",
-  "version": "0.6.0",
+  "version": "1.0.0",
   "author": "Kevin O'Leary",
   "license": "MIT",
   "keywords": [
@@ -34,6 +34,7 @@
     "lite-server": "^2.2.2",
     "reflect-metadata": "^0.1.8",
     "systemjs": "0.19.39",
+    "tslint": "^4.0.2",
     "typescript": "^2.0.10",
     "zone.js": "^0.6.25"
   },
@@ -43,6 +44,7 @@
   },
   "scripts": {
     "start": "tsc && concurrently \"tsc -w\" \"lite-server\" ",
+    "lint": "tslint ./src/datepicker.*.ts -t verbose",
     "lite": "lite-server",
     "test": "tsc && karma start karma.conf.js",
     "tsc": "tsc",

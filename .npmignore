@@ -9,3 +9,4 @@ node_modules
 npm-debug.log
 src/main.*
 systemjs.config.js
+tslint.json

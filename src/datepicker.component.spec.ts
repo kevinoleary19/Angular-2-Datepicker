@@ -23,7 +23,7 @@ describe('DatepickerComponent', () => {
   it('should create component', () => expect(comp).toBeDefined());
 
   describe('yearValidator', () => {
-    const expectedError = { "invalidYear": true };
+    const expectedError = { 'invalidYear': true };
     let testControl;
     beforeEach(() => {
       testControl = new FormControl('');
@@ -53,21 +53,21 @@ describe('DatepickerComponent', () => {
 
     it('returns error when currentMonthNumber is absent', () => {
       testControl.setValue(2015);
-      expect(comp.inRangeValidator(testControl)).toEqual({ "currentMonthMissing": true });
+      expect(comp.inRangeValidator(testControl)).toEqual({ 'currentMonthMissing': true });
     });
 
     it('returns error when rangeStart is set and year is before rangeStart', () => {
       comp.currentMonthNumber = 8;
       comp.rangeStart = new Date(2014, 1);
       testControl.setValue(2012);
-      expect(comp.inRangeValidator(testControl)).toEqual({ "yearBeforeRangeStart": true });
+      expect(comp.inRangeValidator(testControl)).toEqual({ 'yearBeforeRangeStart': true });
     });
 
     it('returns error when rangeEnd is set and year is after rangeEnd', () => {
       comp.currentMonthNumber = 8;
       comp.rangeEnd = new Date(2014, 1);
       testControl.setValue(2016);
-      expect(comp.inRangeValidator(testControl)).toEqual({ "yearAfterRangeEnd": true });
+      expect(comp.inRangeValidator(testControl)).toEqual({ 'yearAfterRangeEnd': true });
     });
 
     it('validates a valid year with no range set', () => {
