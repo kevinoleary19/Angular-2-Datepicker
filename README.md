@@ -2,7 +2,6 @@
 
 [![Version](http://img.shields.io/npm/v/angular2-material-datepicker.svg)](https://www.npmjs.org/package/angular2-material-datepicker)
 [![BuildStatus](https://travis-ci.org/koleary94/Angular-2-Datepicker.svg?branch=master)](https://travis-ci.org/koleary94/Angular-2-Datepicker)
-[![CodeClimate](https://codeclimate.com/github/koleary94/Angular-2-Datepicker/badges/gpa.svg)](https://codeclimate.com/github/koleary94/Angular-2-Datepicker)
 
 A minimalist datepicker library for Angular 2
 

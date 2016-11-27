@@ -404,9 +404,9 @@ export class DatepickerComponent implements OnInit, OnChanges {
     this.clickListener();
   }
 
-  //----------------------------------------------------------------------------------//
-  //-------------------------------- State Management --------------------------------//
-  //----------------------------------------------------------------------------------//
+  // -------------------------------------------------------------------------------- //
+  // -------------------------------- State Management ------------------------------ //
+  // -------------------------------------------------------------------------------- //
   /**
   * Closes the calendar and syncs visual components with selected or current date.
   * This way if a user opens the calendar with this month, scrolls to two months from now,
@@ -431,6 +431,7 @@ export class DatepickerComponent implements OnInit, OnChanges {
     const calendarArray = this.calendar.monthDays(this.currentYear, this.currentMonthNumber);
     this.calendarDays = [].concat.apply([], calendarArray);
   }
+
   /**
   * Visually syncs calendar and input to selected date or current day
   */
@@ -477,7 +478,7 @@ export class DatepickerComponent implements OnInit, OnChanges {
     // transforms input text into appropiate date format
     let inputText: string = '';
     const dateFormat: string | DateFormatFunction = this.dateFormat;
-    if (typeof dateFormat === "string") {
+    if (typeof dateFormat === 'string') {
       switch (dateFormat.toUpperCase()) {
         case 'YYYY-MM-DD':
           inputText = `${date.getFullYear()}/${month}/${day}`;
@@ -492,16 +493,16 @@ export class DatepickerComponent implements OnInit, OnChanges {
           inputText = `${date.getFullYear()}/${month}/${day}`;
           break;
       }
-    } else if (typeof dateFormat === "function") {
+    } else if (typeof dateFormat === 'function') {
       inputText = dateFormat(date);
     }
 
     this.inputText = inputText;
   }
 
-  //----------------------------------------------------------------------------------//
-  //--------------------------------- Click Handlers ---------------------------------//
-  //----------------------------------------------------------------------------------//
+  // -------------------------------------------------------------------------------- //
+  // --------------------------------- Click Handlers ------------------------------- //
+  // -------------------------------------------------------------------------------- //
   /**
   * Sets the date values associated with the calendar.
   * Triggers animation if the month changes
@@ -572,7 +573,7 @@ export class DatepickerComponent implements OnInit, OnChanges {
   * yearControl is valid
   */
   onYearSubmit(): void {
-    if (this.yearControl.valid && this.yearControl.value != this.currentYear) {
+    if (this.yearControl.valid && +this.yearControl.value !== this.currentYear) {
       this.setCurrentYear(+this.yearControl.value);
       this.setCurrentMonth(this.currentMonthNumber);
     } else {
@@ -580,9 +581,9 @@ export class DatepickerComponent implements OnInit, OnChanges {
     }
   }
 
-  //----------------------------------------------------------------------------------//
-  //----------------------------------- Listeners ------------------------------------//
-  //----------------------------------------------------------------------------------//
+  // -------------------------------------------------------------------------------- //
+  // ----------------------------------- Listeners ---------------------------------- //
+  // -------------------------------------------------------------------------------- //
   /**
   * Closes the calendar if a click is not within the datepicker component
   */
@@ -593,9 +594,9 @@ export class DatepickerComponent implements OnInit, OnChanges {
     }
   }
 
-  //----------------------------------------------------------------------------------//
-  //------------------------------------ Helpers -------------------------------------//
-  //----------------------------------------------------------------------------------//
+  // -------------------------------------------------------------------------------- //
+  // ----------------------------------- Helpers ------------------------------------ //
+  // -------------------------------------------------------------------------------- //
   /**
   * Returns the background color for a day
   */
@@ -646,7 +647,7 @@ export class DatepickerComponent implements OnInit, OnChanges {
   * Returns whether a day is the day currently being hovered
   */
   isHoveredDay(day: Date): boolean {
-    return this.hoveredDay ? this.hoveredDay == day && !this.isChosenDay(day) : false;
+    return this.hoveredDay ? this.hoveredDay === day && !this.isChosenDay(day) : false;
   }
 
   /**
@@ -657,9 +658,9 @@ export class DatepickerComponent implements OnInit, OnChanges {
     setTimeout(() => this.animate = 'reset', 185);
   }
 
-  //----------------------------------------------------------------------------------//
-  //----------------------------------- Validators -----------------------------------//
-  //----------------------------------------------------------------------------------//
+  // -------------------------------------------------------------------------------- //
+  // ---------------------------------- Validators ---------------------------------- //
+  // -------------------------------------------------------------------------------- //
   /**
   * Validates that a value is within the 'rangeStart' and/or 'rangeEnd' if specified
   */
@@ -669,15 +670,15 @@ export class DatepickerComponent implements OnInit, OnChanges {
     if (this.currentMonthNumber) {
       const tentativeDate = new Date(+value, this.currentMonthNumber);
       if (this.rangeStart && tentativeDate.getTime() < this.rangeStart.getTime()) {
-        return { "yearBeforeRangeStart": true };
+        return { 'yearBeforeRangeStart': true };
       }
       if (this.rangeEnd && tentativeDate.getTime() > this.rangeEnd.getTime()) {
-        return { "yearAfterRangeEnd": true };
+        return { 'yearAfterRangeEnd': true };
       }
       return null;
     }
 
-    return { "currentMonthMissing": true };
+    return { 'currentMonthMissing': true };
   }
 
   /**
@@ -689,6 +690,6 @@ export class DatepickerComponent implements OnInit, OnChanges {
     if (valid) {
       return null;
     }
-    return { "invalidYear": true };
-	}
+    return { 'invalidYear': true };
+  }
 }
