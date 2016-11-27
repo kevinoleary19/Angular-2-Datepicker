@@ -1,0 +1,23 @@
+engines:
+  rubocop:
+    enabled: true
+    #checks:
+    #	Rubocop/Metrics/ClassLength:
+    #  	enabled: false
+  golint:
+   enabled: true
+  eslint:
+    enabled: true
+  csslint:
+    enabled: true
+  duplication:
+    enabled: true
+    config:
+      languages:
+        	#mass_threshold: 30
+        - javascript
+ratings:
+  paths:
+  - src/**
+exclude_paths:
+- src/calendar.ts
