@@ -410,6 +410,7 @@ export class DatepickerComponent implements OnInit, OnChanges {
   // listeners
   clickListener: Function;
   // forms
+  inputMonths: Array<string>
   monthControl: FormControl;
   yearControl: FormControl;
 
@@ -442,6 +443,7 @@ export class DatepickerComponent implements OnInit, OnChanges {
       (event: MouseEvent) => this.handleGlobalClick(event)
     );
     // form controls
+    this.inputMonths = [];
     this.monthControl = new FormControl('', Validators.required);
     this.yearControl = new FormControl('', Validators.compose([
       Validators.required,
@@ -449,6 +451,8 @@ export class DatepickerComponent implements OnInit, OnChanges {
       this.yearValidator,
       this.inRangeValidator.bind(this)
     ]));
+
+    this.monthControl.valueChanges.subscribe(value => this.onMonthInputChange(value));
   }
 
   ngOnInit() {
@@ -627,6 +631,20 @@ export class DatepickerComponent implements OnInit, OnChanges {
   */
   onMonthClick(): void {
     this.showMonthSelector = !this.showMonthSelector;
+  }
+
+  /**
+  * Listens for month input changes
+  */
+  onMonthInputChange(value: string): void {
+    let inputMonths: Array<string>;
+    if (value) {
+      inputMonths = fuzzySearch(this.months, value);
+    } else {
+      inputMonths = this.months;
+    }
+    console.log(inputMonths);
+    this.inputMonths = inputMonths;
   }
 
   /**
