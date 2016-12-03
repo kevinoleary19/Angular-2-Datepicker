@@ -1,4 +1,4 @@
-export class Calendar {
+export default class CalendarCreator {
     firstWeekDay: number;
 
     constructor(firstWeekDay = 0) {
@@ -62,7 +62,7 @@ export class Calendar {
 
 const months = "JAN FEB MAR APR MAY JUN JUL AUG SEP OCT NOV DEC".split(" ");
 for (var i=0; i<months.length; i++) {
-    Calendar[months[i]] = i;
+    CalendarCreator[months[i]] = i;
 }
 
 /*!
