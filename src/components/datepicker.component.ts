@@ -290,8 +290,8 @@ interface ValidationResult {
                 class="datepicker__calendar__nav__header__month-dropdown__input"
                 [placeholder]="currentMonth"
                 [formControl]="monthControl"
-                (keyup.enter)="monthInput.blur()"
-                (blur)="onMonthSubmit()"
+                (keyup.enter)="onMonthInputSubmit()"
+                (blur)="onMonthInputBlur()"
                 (focus)="onMonthInputFocus()"
               />
               <div
@@ -420,7 +420,8 @@ export class DatepickerComponent implements OnInit, OnChanges {
   // listeners
   clickListener: Function;
   // forms
-  inputMonths: Array<string>
+  inputMonths: Array<string>;
+  suggestedMonth: string;
   monthControl: FormControl;
   yearControl: FormControl;
 
@@ -444,7 +445,7 @@ export class DatepickerComponent implements OnInit, OnChanges {
     this.dayNames = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
     this.months = [
       'January', 'February', 'March', 'April', 'May', 'June', 'July',
-      'August', 'September', 'October', 'November', ' December'
+      'August', 'September', 'October', 'November', 'December'
     ];
     // listeners
     this.clickListener = renderer.listenGlobal(
@@ -528,6 +529,7 @@ export class DatepickerComponent implements OnInit, OnChanges {
   setCurrentMonth(monthNumber: number): void {
     console.log('setCurrentMonth');
     this.currentMonth = this.months[monthNumber];
+    this.currentMonthNumber = this.convertMonthStringToNumber(this.currentMonth);
     this.monthControl.setValue(this.currentMonth);
     const calendarArray = this.calendarCreator.monthDays(this.currentYear, this.currentMonthNumber);
     this.calendarDays = [].concat.apply([], calendarArray);
@@ -649,13 +651,20 @@ export class DatepickerComponent implements OnInit, OnChanges {
   * Listens for month input changes
   */
   onMonthInputChange(value: string): void {
-    console.log(`value:${value}`);
+    console.log(`value: ${value}`);
     let inputMonths: Array<string>;
     if (value) {
       inputMonths = fuzzySearch(this.months, value);
+      if (inputMonths.length > 0) {
+        this.suggestedMonth = inputMonths[0];
+      } else {
+        this.suggestedMonth = this.currentMonth;
+      }
     } else {
       inputMonths = this.months;
+      this.suggestedMonth = this.currentMonth;
     }
+
     console.log(inputMonths);
     this.inputMonths = inputMonths;
   }
@@ -673,15 +682,23 @@ export class DatepickerComponent implements OnInit, OnChanges {
   * Changes the month of the calendar
   */
   onMonthSelect(month: string): void {
+    console.log('onMonthSelect');
+    const newMonthNumber = this.convertMonthStringToNumber(month);
+    this.setCurrentMonth(newMonthNumber);
+  }
 
+  onMonthInputBlur(): void {
+    this.showInputMonths = false;
+    this.monthControl.setValue(this.currentMonth);
   }
 
   /**
   *
   */
-  onMonthSubmit(): void {
-    console.log('onMonthSubmit');
-    // this.showInputMonths = false;
+  onMonthInputSubmit(): void {
+    this.showInputMonths = false;
+    const newMonthNumber = this.convertMonthStringToNumber(this.suggestedMonth);
+    this.setCurrentMonth(newMonthNumber);
   }
 
   /**
@@ -722,6 +739,10 @@ export class DatepickerComponent implements OnInit, OnChanges {
   // -------------------------------------------------------------------------------- //
   // ----------------------------------- Helpers ------------------------------------ //
   // -------------------------------------------------------------------------------- //
+  convertMonthStringToNumber(month: string): number {
+    return this.months.indexOf(month);
+  }
+
   /**
   * Returns the background color for a day
   */
