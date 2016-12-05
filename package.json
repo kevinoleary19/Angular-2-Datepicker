@@ -52,6 +52,7 @@
     "ngc": "node_modules/.bin/ngc -p tsconfig-aot.json && rm integration-test/*.metadata.json"
   },
   "dependencies": {
+    "moment": "^2.17.1",
     "rxjs": "5.0.0-beta.12"
   }
 }
