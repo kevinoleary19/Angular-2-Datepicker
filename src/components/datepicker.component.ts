@@ -163,9 +163,9 @@ interface ValidationResult {
       }
 
       .datepicker__calendar__nav__header {
+        display: flex;
         width: 11em;
         margin: 0 1em;
-        text-align: center;
       }
 
       .datepicker__calendar__nav__header__form {
@@ -174,30 +174,37 @@ interface ValidationResult {
       }
 
       .datepicker__calendar__nav__header__month-dropdown {
-        position: relative;
-        display: inline;
-        max-height: 10em;
-        overflow: auto;
+        position: absolute;
+        width: 6.4em;
+        min-height: 2em;
+        display: inline-block;
+        border: 1px solid #dadada;
         border-radius: 2px;
         background-color: #ffffff;
+        transition: 0.32s;
       }
 
       .datepicker__calendar__nav__header__month-dropdown__input {
-        display: inline-block;
-        width: 6em;
-        padding: 2px 4px;
+        width: 100%;
+        padding: 6px 4px;
         outline: 0;
-        border: 1px solid #dadada;
-        border-radius: 2px;
+        border: 0;
         font-size: 1em;
-        transition: 0.32s;
+      }
+
+      .datepicker__calendar__nav__header__month-dropdown__months-container {
+        overflow: auto;
+        box-sizing: border-box;
+        max-height: 8.4em;
+        background-color: #ffffff;
       }
 
       .datepicker__calendar__nav__header__month-dropdown__month {
-        padding: 8px 10px;
+        padding: 6px 8px;
         text-align: left;
         transition: 0.32s;
         cursor: pointer;
+        border-top: 1px solid #fafafa;
       }
 
       .datepicker__calendar__nav__header__month-dropdown__month:hover {
@@ -287,11 +294,14 @@ interface ValidationResult {
                 (blur)="onMonthSubmit()"
                 (focus)="onMonthInputFocus()"
               />
-              <div *ngIf="showMonthSelector">
+              <div
+                *ngIf="showInputMonths"
+                class="datepicker__calendar__nav__header__month-dropdown__months-container"
+              >
                 <div
                   class="datepicker__calendar__nav__header__month-dropdown__month"
                   [ngClass]="{'datepicker__calendar__nav__header__month-dropdown__month--active': month === currentMonth}"
-                  *ngFor="let month of months"
+                  *ngFor="let month of inputMonths"
                   (click)="onMonthSelect(month)"
                 >
                   {{ month }}
@@ -391,7 +401,7 @@ export class DatepickerComponent implements OnInit, OnChanges {
   @Input() inputText: string;
   // view logic
   @Input() showCalendar: boolean;
-  @Input() showMonthSelector: boolean;
+  @Input() showInputMonths: boolean;
   // events
   @Output() onSelect = new EventEmitter<Date>();
   // time
@@ -419,7 +429,7 @@ export class DatepickerComponent implements OnInit, OnChanges {
     this.dateFormat = 'YYYY-MM-DD';
     // view logic
     this.showCalendar = false;
-    this.showMonthSelector = false;
+    this.showInputMonths = false;
     // colors
     this.colors = {
       'black': '#333333',
@@ -487,6 +497,7 @@ export class DatepickerComponent implements OnInit, OnChanges {
   * Sets the date values associated with the ui
   */
   private setCurrentValues(date: Date) {
+    console.log('setCurrentValues');
     this.currentMonthNumber = date.getMonth();
     this.currentMonth = this.months[this.currentMonthNumber];
 
@@ -515,6 +526,7 @@ export class DatepickerComponent implements OnInit, OnChanges {
   * Sets the currentMonth and creates new calendar days for the given month
   */
   setCurrentMonth(monthNumber: number): void {
+    console.log('setCurrentMonth');
     this.currentMonth = this.months[monthNumber];
     this.monthControl.setValue(this.currentMonth);
     const calendarArray = this.calendarCreator.monthDays(this.currentYear, this.currentMonthNumber);
@@ -630,13 +642,14 @@ export class DatepickerComponent implements OnInit, OnChanges {
   * Toggles the month selector
   */
   onMonthClick(): void {
-    this.showMonthSelector = !this.showMonthSelector;
+    // this.showInputMonths = !this.showInputMonths;
   }
 
   /**
   * Listens for month input changes
   */
   onMonthInputChange(value: string): void {
+    console.log(`value:${value}`);
     let inputMonths: Array<string>;
     if (value) {
       inputMonths = fuzzySearch(this.months, value);
@@ -651,7 +664,9 @@ export class DatepickerComponent implements OnInit, OnChanges {
   *
   */
   onMonthInputFocus(): void {
+    console.log('onMonthInputFocus');
     this.monthControl.reset();
+    this.showInputMonths = true;
   }
 
   /**
@@ -665,7 +680,8 @@ export class DatepickerComponent implements OnInit, OnChanges {
   *
   */
   onMonthSubmit(): void {
-
+    console.log('onMonthSubmit');
+    // this.showInputMonths = false;
   }
 
   /**
@@ -698,7 +714,7 @@ export class DatepickerComponent implements OnInit, OnChanges {
   */
   handleGlobalClick(event: MouseEvent): void {
     const withinElement = this.elementRef.nativeElement.contains(event.target);
-    if (!this.elementRef.nativeElement.contains(event.target)) {
+    if (!withinElement && this.showCalendar) {
       this.closeCalendar();
     }
   }
