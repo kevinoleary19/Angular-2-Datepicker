@@ -344,10 +344,10 @@ export class DatepickerComponent implements OnInit, OnChanges {
   @Input() currentMonth: string;
   @Input() dayNames: Array<String>;
   @Input() hoveredDay: Date;
+  @Input() months: Array<string>;
   calendar: Calendar;
   currentMonthNumber: number;
   currentYear: number;
-  months: Array<string>;
   // animation
   animate: string;
   // colors
