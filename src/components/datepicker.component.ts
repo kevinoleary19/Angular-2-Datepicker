@@ -178,15 +178,16 @@ interface ValidationResult {
         width: 6.4em;
         min-height: 2em;
         display: inline-block;
-        border: 1px solid #dadada;
+        border-width: 1px;
         border-radius: 2px;
+        border-style: solid;
         background-color: #ffffff;
         transition: 0.32s;
       }
 
       .datepicker__calendar__nav__header__month-dropdown__input {
         width: 100%;
-        padding: 6px 4px;
+        padding: 6px 8px;
         outline: 0;
         border: 0;
         font-size: 1em;
@@ -214,6 +215,10 @@ interface ValidationResult {
       .datepicker__calendar__nav__header__month-dropdown__month--active {
         background-color: rgb(248,248,248);
         font-weight: bold;
+      }
+
+      .datepicker__calendar__nav__header__month-dropdown__month--suggested {
+        background-color: rgb(248,248,248);
       }
 
       .datepicker__calendar__nav__header__year-input {
@@ -284,14 +289,14 @@ interface ValidationResult {
           <div class="datepicker__calendar__nav__header">
             <div
               class="datepicker__calendar__nav__header__month-dropdown"
+              [ngStyle]="{'border-color': showInputMonths ? accentColor : '#dadada'}"
             >
               <input
                 #monthInput
                 class="datepicker__calendar__nav__header__month-dropdown__input"
                 [placeholder]="currentMonth"
                 [formControl]="monthControl"
-                (keyup.enter)="onMonthInputSubmit()"
-                (blur)="onMonthInputBlur()"
+                (keyup.enter)="onMonthInputSubmit(); monthInput.blur();"
                 (focus)="onMonthInputFocus()"
               />
               <div
@@ -300,7 +305,9 @@ interface ValidationResult {
               >
                 <div
                   class="datepicker__calendar__nav__header__month-dropdown__month"
-                  [ngClass]="{'datepicker__calendar__nav__header__month-dropdown__month--active': month === currentMonth}"
+                  [ngClass]="{
+                    'datepicker__calendar__nav__header__month-dropdown__month--active': month === currentMonth,
+                    'datepicker__calendar__nav__header__month-dropdown__month--suggested': month === suggestedMonth}"
                   *ngFor="let month of inputMonths"
                   (click)="onMonthSelect(month)"
                 >
@@ -420,8 +427,8 @@ export class DatepickerComponent implements OnInit, OnChanges {
   // listeners
   clickListener: Function;
   // forms
-  inputMonths: Array<string>;
-  suggestedMonth: string;
+  @Input() inputMonths: Array<string>;
+  @Input() suggestedMonth: string;
   monthControl: FormControl;
   yearControl: FormControl;
 
@@ -626,30 +633,14 @@ export class DatepickerComponent implements OnInit, OnChanges {
     }
   }
 
-  /**
-  * Closes the calendar when the cancel button is clicked
-  */
   onCancel(): void {
     this.closeCalendar();
   }
 
-  /**
-  * Toggles the calendar when the date input is clicked
-  */
   onInputClick(): void {
     this.showCalendar = !this.showCalendar;
   }
 
-  /**
-  * Toggles the month selector
-  */
-  onMonthClick(): void {
-    // this.showInputMonths = !this.showInputMonths;
-  }
-
-  /**
-  * Listens for month input changes
-  */
   onMonthInputChange(value: string): void {
     console.log(`value: ${value}`);
     let inputMonths: Array<string>;
@@ -669,51 +660,34 @@ export class DatepickerComponent implements OnInit, OnChanges {
     this.inputMonths = inputMonths;
   }
 
-  /**
-  *
-  */
   onMonthInputFocus(): void {
     console.log('onMonthInputFocus');
     this.monthControl.reset();
     this.showInputMonths = true;
   }
 
-  /**
-  * Changes the month of the calendar
-  */
   onMonthSelect(month: string): void {
     console.log('onMonthSelect');
+    this.showInputMonths = false;
     const newMonthNumber = this.convertMonthStringToNumber(month);
     this.setCurrentMonth(newMonthNumber);
   }
 
-  onMonthInputBlur(): void {
-    this.showInputMonths = false;
-    this.monthControl.setValue(this.currentMonth);
-  }
-
-  /**
-  *
-  */
   onMonthInputSubmit(): void {
     this.showInputMonths = false;
+    console.log(`suggestedMonth: ${this.suggestedMonth}`);
     const newMonthNumber = this.convertMonthStringToNumber(this.suggestedMonth);
     this.setCurrentMonth(newMonthNumber);
   }
 
-  /**
-  * Returns the font color for a day
-  */
   onSelectDay(day: Date): void {
+    // minimize input months in case open
+    this.showInputMonths = false;
     this.date = day;
     this.onSelect.emit(day);
     this.showCalendar = !this.showCalendar;
   }
 
-  /**
-  * Sets the current year and current month if the year from
-  * yearControl is valid
-  */
   onYearSubmit(): void {
     if (this.yearControl.valid && +this.yearControl.value !== this.currentYear) {
       this.setCurrentYear(+this.yearControl.value);
@@ -730,7 +704,19 @@ export class DatepickerComponent implements OnInit, OnChanges {
   * Closes the calendar if a click is not within the datepicker component
   */
   handleGlobalClick(event: MouseEvent): void {
-    const withinElement = this.elementRef.nativeElement.contains(event.target);
+    const nativeElement = this.elementRef.nativeElement;
+    const withinElement = nativeElement.contains(event.target);
+
+    if (event.srcElement.className === 'datepicker__calendar__nav__header__month-dropdown__month') {
+      this.monthControl.setValue(this.currentMonth);
+      return;
+    }
+
+    if (!withinElement) {
+      this.monthControl.setValue(this.currentMonth);
+      this.showInputMonths = false;
+    }
+
     if (!withinElement && this.showCalendar) {
       this.closeCalendar();
     }
@@ -743,9 +729,6 @@ export class DatepickerComponent implements OnInit, OnChanges {
     return this.months.indexOf(month);
   }
 
-  /**
-  * Returns the background color for a day
-  */
   getDayBackgroundColor(day: Date): string {
     let color = this.colors['white'];
     if (this.isChosenDay(day)) {
@@ -756,9 +739,6 @@ export class DatepickerComponent implements OnInit, OnChanges {
     return color;
   }
 
-  /**
-  * Returns the font color for a day
-  */
   getDayFontColor(day: Date): string {
     let color = this.colors['black'];
     if (this.isChosenDay(day)) {
@@ -767,9 +747,6 @@ export class DatepickerComponent implements OnInit, OnChanges {
     return color;
   }
 
-  /**
-  * Returns whether a day is the chosen day
-  */
   isChosenDay(day: Date): boolean {
     if (day) {
       return this.date ? day.toDateString() === this.date.toDateString() : false;
@@ -778,9 +755,6 @@ export class DatepickerComponent implements OnInit, OnChanges {
     }
   }
 
-  /**
-  * Returns whether a day is the current calendar day
-  */
   isCurrentDay(day: Date): boolean {
     if (day) {
       return day.toDateString() === new Date().toDateString();
@@ -789,9 +763,6 @@ export class DatepickerComponent implements OnInit, OnChanges {
     }
   }
 
-  /**
-  * Returns whether a day is the day currently being hovered
-  */
   isHoveredDay(day: Date): boolean {
     return this.hoveredDay ? this.hoveredDay === day && !this.isChosenDay(day) : false;
   }
