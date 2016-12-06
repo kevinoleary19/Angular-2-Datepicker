@@ -433,6 +433,7 @@ export class DatepickerComponent implements OnInit, OnChanges {
 
     const calendarArray = this.calendar.monthDays(this.currentYear, this.currentMonthNumber);
     this.calendarDays = [].concat.apply([], calendarArray);
+    this.calendarDays = this.filterInvalidDays(this.calendarDays);
   }
 
   /**
@@ -455,6 +456,7 @@ export class DatepickerComponent implements OnInit, OnChanges {
     this.currentMonth = this.months[monthNumber];
     const calendarArray = this.calendar.monthDays(this.currentYear, this.currentMonthNumber);
     this.calendarDays = [].concat.apply([], calendarArray);
+    this.calendarDays = this.filterInvalidDays(this.calendarDays);
   }
 
   /**
@@ -527,6 +529,33 @@ export class DatepickerComponent implements OnInit, OnChanges {
   }
 
   /**
+   * Check if a date is within the range.
+   * @param date The date to check.
+   * @return true if the date is within the range, false if not.
+   */
+  isDateValid(date: Date): boolean {
+    return (!this.rangeStart || date.getTime() >= this.rangeStart.getTime()) &&
+           (!this.rangeEnd || date.getTime() <= this.rangeEnd.getTime());
+  }
+
+  /**
+   * Filter out the days that are not in the date range.
+   * @param calendarDays The calendar days
+   * @return {Array} The input with the invalid days replaced by 0
+   */
+  filterInvalidDays(calendarDays: Array<number>): Array<number> {
+    let newCalendarDays = [];
+    calendarDays.forEach((day: number | Date) => {
+      if (day === 0 || !this.isDateValid(<Date> day)) {
+        newCalendarDays.push(0)
+      } else {
+        newCalendarDays.push(day)
+      }
+    });
+    return newCalendarDays;
+  }
+
+  /**
   * Closes the calendar when the cancel button is clicked
   */
   onCancel(): void {
@@ -544,9 +573,11 @@ export class DatepickerComponent implements OnInit, OnChanges {
   * Returns the font color for a day
   */
   onSelectDay(day: Date): void {
-    this.date = day;
-    this.onSelect.emit(day);
-    this.showCalendar = !this.showCalendar;
+    if (this.isDateValid(day)) {
+      this.date = day;
+      this.onSelect.emit(day);
+      this.showCalendar = !this.showCalendar;
+    }
   }
 
   /**
