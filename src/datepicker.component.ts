@@ -334,7 +334,8 @@ export class DatepickerComponent implements OnInit, OnChanges {
   @Input() inputText: string;
   // view logic
   @Input() showCalendar: boolean;
-  @Input() cancelText: string = "Cancel";
+  @Input() cancelText: string = 'Cancel';
+  @Input() weekStart: number = 0;
   // events
   @Output() onSelect = new EventEmitter<Date>();
   // time
@@ -370,7 +371,9 @@ export class DatepickerComponent implements OnInit, OnChanges {
     this.accentColor = this.colors['blue'];
     this.altInputStyle = false;
     // time
-    this.calendar = new Calendar();
+    console.log("First day sent is ", this.weekStart)
+    console.log("cancel text is ", this.cancelText)
+    this.calendar = new Calendar(this.weekStart);
     this.dayNames = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
     this.months = [
       'January', 'February', 'March', 'April', 'May', 'June', 'July',
@@ -392,6 +395,10 @@ export class DatepickerComponent implements OnInit, OnChanges {
   }
 
   ngOnInit() {
+    this.calendar.firstWeekDay = this.weekStart;
+    for (let i = 0; i < this.weekStart; i++) {
+      this.dayNames.push(this.dayNames.shift());
+    }
     this.syncVisualsWithDate();
   }
 

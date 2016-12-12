@@ -51,6 +51,7 @@ Optional parameters are listed below.
 | `rangeStart` | Date | The beginning boundary for selecting a date. For example, passing in `new Date(2015,2)` will prevent the user from being able to get to February 2015. |
 | `rangeEnd` | Date | Same as `rangeStart`, but for the end boundary. e.g. passing in `new Date()` will prevent the user from being able to get to the next month. |
 | `cancelText` | string | default is `Cancel` can be changed to the text you desire. |
+| `weekStart` | number | default is `0` witch is Sunday, Monday is `1` and so on |
 
 
 ### CSS
