@@ -50,6 +50,8 @@ Optional parameters are listed below.
 |`placeholder` | string | This text will be shown if the date is empty |
 | `rangeStart` | Date | The beginning boundary for selecting a date. For example, passing in `new Date(2015,2)` will prevent the user from being able to get to February 2015. |
 | `rangeEnd` | Date | Same as `rangeStart`, but for the end boundary. e.g. passing in `new Date()` will prevent the user from being able to get to the next month. |
+| `cancelText` | string | default is `Cancel` can be changed to the text you desire. |
+
 
 ### CSS
 The css is inlined and autoprefixed to support the last two versions of major browsers as of 2016/9/20

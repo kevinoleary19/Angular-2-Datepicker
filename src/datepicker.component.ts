@@ -304,7 +304,7 @@ interface ValidationResult {
             class="datepicker__calendar__cancel"
             (click)="onCancel()"
           >
-            Cancel
+            {{cancelText}}
           </div>
         </div>
       </div>
@@ -334,6 +334,7 @@ export class DatepickerComponent implements OnInit, OnChanges {
   @Input() inputText: string;
   // view logic
   @Input() showCalendar: boolean;
+  @Input() cancelText: string = "Cancel";
   // events
   @Output() onSelect = new EventEmitter<Date>();
   // time
