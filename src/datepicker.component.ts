@@ -305,7 +305,7 @@ interface ValidationResult {
             class="datepicker__calendar__cancel"
             (click)="onCancel()"
           >
-            Cancel
+            {{ cancelButtonLabel }}
           </div>
         </div>
       </div>
@@ -345,6 +345,8 @@ export class DatepickerComponent implements OnInit, OnChanges {
   @Input() dayNames: Array<String>;
   @Input() hoveredDay: Date;
   @Input() months: Array<string>;
+  // The label of the cancel button.
+  @Input() cancelButtonLabel: string = 'Cancel';
   calendar: Calendar;
   currentMonthNumber: number;
   currentYear: number;
