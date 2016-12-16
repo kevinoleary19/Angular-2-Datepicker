@@ -376,15 +376,7 @@ export class DatepickerComponent implements OnInit, OnChanges {
     this.altInputStyle = false;
     // time
     this.calendar = new Calendar(this.firstDayOfTheWeek);
-    // Calculate day names order
-    this.dayNames = ['S', 'M', 'T', 'W', 'T', 'F', 'S']; // Default order: firstDayOfTheWeek = 0
-    if (this.firstDayOfTheWeek < 0 || this.firstDayOfTheWeek >= this.dayNames.length) {
-      // Out of range
-      throw Error(`The firstDayOfTheWeek is not in range between ${0} and ${this.dayNames.length - 1}`)
-    } else {
-      this.dayNames = this.dayNames.slice(this.firstDayOfTheWeek, this.dayNames.length)
-                        .concat(this.dayNames.slice(0, this.firstDayOfTheWeek)) // Append beginning to end
-    }
+    this.updateDayNames();
 
     this.months = [
       'January', 'February', 'March', 'April', 'May', 'June', 'July',
@@ -412,6 +404,9 @@ export class DatepickerComponent implements OnInit, OnChanges {
   ngOnChanges(changes: { [propertyName: string]: SimpleChange }) {
     if ((changes['date'] || changes['dateFormat'])) {
       this.syncVisualsWithDate();
+    }
+    if (changes['firstDayOfTheWeek']) {
+      this.updateDayNames();
     }
   }
 
@@ -446,6 +441,21 @@ export class DatepickerComponent implements OnInit, OnChanges {
     const calendarArray = this.calendar.monthDays(this.currentYear, this.currentMonthNumber);
     this.calendarDays = [].concat.apply([], calendarArray);
     this.calendarDays = this.filterInvalidDays(this.calendarDays);
+  }
+
+  /**
+   * Update the day names order. The order can be modified with the firstDayOfTheWeek input, while 0 means that the
+   * first day will be sunday.
+   */
+  private updateDayNames() {
+    this.dayNames = ['S', 'M', 'T', 'W', 'T', 'F', 'S']; // Default order: firstDayOfTheWeek = 0
+    if (this.firstDayOfTheWeek < 0 || this.firstDayOfTheWeek >= this.dayNames.length) {
+      // Out of range
+      throw Error(`The firstDayOfTheWeek is not in range between ${0} and ${this.dayNames.length - 1}`)
+    } else {
+      this.dayNames = this.dayNames.slice(this.firstDayOfTheWeek, this.dayNames.length)
+        .concat(this.dayNames.slice(0, this.firstDayOfTheWeek)); // Append beginning to end
+    }
   }
 
   /**
