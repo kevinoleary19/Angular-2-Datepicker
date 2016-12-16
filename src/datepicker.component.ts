@@ -343,6 +343,7 @@ export class DatepickerComponent implements OnInit, OnChanges {
   @Input() calendarDays: Array<number>;
   @Input() currentMonth: string;
   @Input() dayNames: Array<String>;
+  @Input() firstDayOfTheWeek = 0; // 0 For Sunday
   @Input() hoveredDay: Date;
   @Input() months: Array<string>;
   // The label of the cancel button.
@@ -374,8 +375,17 @@ export class DatepickerComponent implements OnInit, OnChanges {
     this.accentColor = this.colors['blue'];
     this.altInputStyle = false;
     // time
-    this.calendar = new Calendar();
-    this.dayNames = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+    this.calendar = new Calendar(this.firstDayOfTheWeek);
+    // Calculate day names order
+    this.dayNames = ['S', 'M', 'T', 'W', 'T', 'F', 'S']; // Default order: firstDayOfTheWeek = 0
+    if (this.firstDayOfTheWeek < 0 || this.firstDayOfTheWeek >= this.dayNames.length) {
+      // Out of range
+      throw Error(`The firstDayOfTheWeek is not in range between ${0} and ${this.dayNames.length - 1}`)
+    } else {
+      this.dayNames = this.dayNames.slice(this.firstDayOfTheWeek, this.dayNames.length)
+                        .concat(this.dayNames.slice(0, this.firstDayOfTheWeek)) // Append beginning to end
+    }
+
     this.months = [
       'January', 'February', 'March', 'April', 'May', 'June', 'July',
       'August', 'September', 'October', 'November', ' December'
