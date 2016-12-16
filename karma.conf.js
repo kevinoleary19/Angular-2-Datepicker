@@ -39,6 +39,9 @@ module.exports = function(config) {
       'node_modules/zone.js/dist/async-test.js',
       'node_modules/zone.js/dist/fake-async-test.js',
 
+      // MomentJs for dates
+      'node_modules/moment/moment.js',
+
       // RxJs
       { pattern: 'node_modules/rxjs/**/*.js', included: false, watched: false },
       { pattern: 'node_modules/rxjs/**/*.js.map', included: false, watched: false },
