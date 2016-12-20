@@ -60,6 +60,25 @@ interface ValidationResult {
               -ms-user-select: none;
                   user-select: none;
       }
+      
+      .datepicker__calendar__inner {
+        position: absolute;
+        overflow: hidden;
+        z-index: 1000;
+        top: 0;
+        left: 0;
+        height: 23.8em;
+        width: 20.5em;
+        font-size: 14px;
+        background-color: #ffffff;
+        box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+        cursor: default;
+        -webkit-touch-callout: none;
+          -webkit-user-select: none;
+             -moz-user-select: none;
+              -ms-user-select: none;
+                  user-select: none;
+      }
 
       .datepicker__calendar__cancel {
         position: absolute;
@@ -180,6 +199,12 @@ interface ValidationResult {
         font-size: 1em;
         transition: 0.32s;
       }
+      
+      .datepicker__calendar__nav__header__inner__year {
+        width: 11em;
+        margin: 0 1em;
+        text-align: center;
+      }
 
       .datepicker__calendar__nav__header__year:focus.ng-invalid {
         border: 1px solid #e82525;
@@ -199,15 +224,40 @@ interface ValidationResult {
         padding: .2em .6em;
         font-size: 14px;
       }
+      
+      .btn {
+        background: red;
+      }
+      
+      .grid {
+        background: white;
+        margin: 0 0 20px 0;
+        padding-right: 0;
+      }
+        
+      .grid:after {
+        content: "";
+        display: table;
+        clear: both;
+      }
+      
+      .grid:last-of-type {
+        padding-right: 0;
+      }
+      
+      [class*='col-'] {
+        float: left;
+        padding-right: 20px;
+      }
+      
+      .col-1-4 {
+        width: 25%;
+      }
     `
   ],
   template: `
-    <div
-      class="datepicker"
-      [ngStyle]="{'font-family': fontFamily}"
-    >
-      <input
-        [disabled]="disabled"
+    <div class="datepicker" [ngStyle]="{'font-family': fontFamily}">
+      <input [disabled]="disabled"
         class="datepicker__input"
         [placeholder]="placeholder"
         [ngStyle]="{'color': altInputStyle ? colors['white'] : colors['black'],
@@ -215,45 +265,28 @@ interface ValidationResult {
                     'border': altInputStyle ? '' : '1px solid #dadada'}"
         (click)="onInputClick()"
         [(ngModel)]="inputText"
-        readonly="true"
-      >
-      <div
-        class="datepicker__calendar"
-        *ngIf="showCalendar"
-      >
+        readonly="true">
+      <div class="datepicker__calendar" *ngIf="showCalendar">
         <div class="datepicker__calendar__nav">
-          <div
-            class="datepicker__calendar__nav__arrow"
-            (click)="onArrowClick('left')"
-          >
-          <svg class="datepicker__calendar__nav__chevron" x="0px" y="0px" viewBox="0 0 50 50">
-            <g>
-              <path d="M39.7,7.1c0.5,0.5,0.5,1.2,0,1.7L29,19.6c-0.5,0.5-1.2,1.2-1.7,1.7L16.5,32.1c-0.5,0.5-1.2,0.5-1.7,0l-2.3-2.3
-                    c-0.5-0.5-1.2-1.2-1.7-1.7l-2.3-2.3c-0.5-0.5-0.5-1.2,0-1.7l10.8-10.8c0.5-0.5,1.2-1.2,1.7-1.7L31.7,0.8c0.5-0.5,1.2-0.5,1.7,0
-                    l2.3,2.3c0.5,0.5,1.2,1.2,1.7,1.7L39.7,7.1z"/>
-            </g>
-            <g>
-              <path d="M33.4,49c-0.5,0.5-1.2,0.5-1.7,0L20.9,38.2c-0.5-0.5-1.2-1.2-1.7-1.7L8.4,25.7c-0.5-0.5-0.5-1.2,0-1.7l2.3-2.3
-                    c0.5-0.5,1.2-1.2,1.7-1.7l2.3-2.3c0.5-0.5,1.2-0.5,1.7,0l10.8,10.8c0.5,0.5,1.2,1.2,1.7,1.7l10.8,10.8c0.5,0.5,0.5,1.2,0,1.7
-                    L37.4,45c-0.5,0.5-1.2,1.2-1.7,1.7L33.4,49z"/>
-            </g>
-          </svg>
+          <div class="datepicker__calendar__nav__arrow" (click)="onArrowClick('left')" >
+            <svg class="datepicker__calendar__nav__chevron" x="0px" y="0px" viewBox="0 0 50 50">
+              <g>
+                <path d="M39.7,7.1c0.5,0.5,0.5,1.2,0,1.7L29,19.6c-0.5,0.5-1.2,1.2-1.7,1.7L16.5,32.1c-0.5,0.5-1.2,0.5-1.7,0l-2.3-2.3
+                      c-0.5-0.5-1.2-1.2-1.7-1.7l-2.3-2.3c-0.5-0.5-0.5-1.2,0-1.7l10.8-10.8c0.5-0.5,1.2-1.2,1.7-1.7L31.7,0.8c0.5-0.5,1.2-0.5,1.7,0
+                      l2.3,2.3c0.5,0.5,1.2,1.2,1.7,1.7L39.7,7.1z"/>
+              </g>
+              <g>
+                <path d="M33.4,49c-0.5,0.5-1.2,0.5-1.7,0L20.9,38.2c-0.5-0.5-1.2-1.2-1.7-1.7L8.4,25.7c-0.5-0.5-0.5-1.2,0-1.7l2.3-2.3
+                      c0.5-0.5,1.2-1.2,1.7-1.7l2.3-2.3c0.5-0.5,1.2-0.5,1.7,0l10.8,10.8c0.5,0.5,1.2,1.2,1.7,1.7l10.8,10.8c0.5,0.5,0.5,1.2,0,1.7
+                      L37.4,45c-0.5,0.5-1.2,1.2-1.7,1.7L33.4,49z"/>
+              </g>
+            </svg>
           </div>
           <div class="datepicker__calendar__nav__header">
             <span>{{ currentMonth }}</span>
-            <input
-              #yearInput
-              class="datepicker__calendar__nav__header__year"
-              placeholder="Year"
-              [formControl]="yearControl"
-              (keyup.enter)="yearInput.blur()"
-              (blur)="onYearSubmit()"
-            />
+            <span (click)="showYearDiv()">{{ currentYear }}</span>
           </div>
-          <div
-            class="datepicker__calendar__nav__arrow"
-            (click)="onArrowClick('right')"
-          >
+          <div class="datepicker__calendar__nav__arrow" (click)="onArrowClick('right')" >
             <svg class="datepicker__calendar__nav__chevron" x="0px" y="0px" viewBox="0 0 50 50">
               <g>
                 <path d="M8.4,7.1c-0.5,0.5-0.5,1.2,0,1.7l10.8,10.8c0.5,0.5,1.2,1.2,1.7,1.7l10.8,10.8c0.5,0.5,1.2,0.5,1.7,0l2.3-2.3
@@ -268,21 +301,11 @@ interface ValidationResult {
             </svg>
           </div>
         </div>
-        <div
-          class="datepicker__calendar__content"
-        >
+        <div class="datepicker__calendar__content" >
           <div class="datepicker__calendar__labels">
-            <div
-              class="datepicker__calendar__label"
-              *ngFor="let day of dayNames"
-            >
-              {{ day }}
-            </div>
+            <div class="datepicker__calendar__label" *ngFor="let day of dayNames" >{{ day }}</div>
           </div>
-          <div
-            [@calendarAnimation]="animate"
-            class="datepicker__calendar__month"
-          >
+          <div [@calendarAnimation]="animate" class="datepicker__calendar__month">
             <div
               *ngFor="let day of calendarDays"
               class="datepicker__calendar__month__day"
@@ -293,19 +316,34 @@ interface ValidationResult {
                           }"
               (click)="onSelectDay(day)"
               (mouseenter)="hoveredDay = day"
-              (mouseleave)="hoveredDay = null"
-            >
+              (mouseleave)="hoveredDay = null">
               <span *ngIf="day != 0">
                 {{ day.getDate() }}
               </span>
             </div>
           </div>
-          <div
-            class="datepicker__calendar__cancel"
-            (click)="onCancel()"
-          >
-            Cancel
+          <div class="datepicker__calendar__cancel" (click)="onCancel()" >Cancel</div>
+        </div>
+        
+        <div *ngIf="showYear" class="datepicker__calendar__inner">
+        
+          <div class="datepicker__calendar__nav">
+            <div class="datepicker__calendar__nav__header__inner__year">
+                <span>{{ currentYear }}</span>
+            </div>
           </div>
+          
+          <div class="datepicker__calendar__content">
+            <div class="grid">
+              <div class="col-1-4" *ngFor="let year of calendarYears">
+                <button class="btn" (click)="selectYear(year)">{{year}}</button>
+              </div>
+            </div>
+            <div class="datepicker__calendar__cancel" (click)="onCancel()">
+              Cancel
+            </div>
+          </div>
+          
         </div>
       </div>
     </div>
@@ -338,6 +376,7 @@ export class DatepickerComponent implements OnInit, OnChanges {
   @Output() onSelect = new EventEmitter<Date>();
   // time
   @Input() calendarDays: Array<number>;
+  @Input() calendarYears: Array<number>;
   @Input() currentMonth: string;
   @Input() dayNames: Array<String>;
   @Input() hoveredDay: Date;
@@ -353,7 +392,8 @@ export class DatepickerComponent implements OnInit, OnChanges {
   clickListener: Function;
   // forms
   yearControl: FormControl;
-
+  //Show div for years
+  showYear: boolean = false;
 
   constructor(private renderer: Renderer, private elementRef: ElementRef) {
     this.dateFormat = 'YYYY-MM-DD';
@@ -371,6 +411,9 @@ export class DatepickerComponent implements OnInit, OnChanges {
     // time
     this.calendar = new Calendar();
     this.dayNames = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+    this.calendarYears = [
+      2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020
+    ];
     this.months = [
       'January', 'February', 'March', 'April', 'May', 'June', 'July',
       'August', 'September', 'October', 'November', ' December'
@@ -691,5 +734,15 @@ export class DatepickerComponent implements OnInit, OnChanges {
       return null;
     }
     return { 'invalidYear': true };
+  }
+
+  showYearDiv() {
+    this.showYear = !this.showYear;
+  }
+
+  selectYear(year: number) {
+    this.currentYear = year;
+    this.setCurrentMonth(this.currentMonthNumber);
+    setTimeout(() => this.showYear = false)
   }
 }
