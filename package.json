@@ -1,7 +1,7 @@
 {
-  "name": "angular2-material-datepicker",
+  "name": "@zafarsaeedkhan/angular2-material-datepicker",
   "version": "1.0.0",
-  "author": "Kevin O'Leary",
+  "author": "Zafar Saeed Khan",
   "license": "MIT",
   "keywords": [
     "angular2",
@@ -11,14 +11,14 @@
     "material"
   ],
   "devDependencies": {
-    "@angular/common": "~2.2.1",
-    "@angular/compiler": "~2.2.1",
-    "@angular/compiler-cli": "~2.2.1",
-    "@angular/core": "~2.2.1",
-    "@angular/forms": "~2.2.1",
-    "@angular/platform-browser": "~2.2.1",
-    "@angular/platform-browser-dynamic": "~2.2.1",
-    "@angular/platform-server": "~2.2.1",
+    "@angular/common": "^2.4.0",
+    "@angular/compiler": "^2.4.0",
+    "@angular/compiler-cli": "^2.4.0",
+    "@angular/core": "^2.4.0",
+    "@angular/forms": "^2.4.0",
+    "@angular/platform-browser": "^2.4.0",
+    "@angular/platform-browser-dynamic": "^2.4.0",
+    "@angular/platform-server": "^2.4.0",
     "@types/es6-shim": "^0.31.32",
     "@types/jasmine": "^2.5.38",
     "concurrently": "^3.0.0",
@@ -35,12 +35,12 @@
     "reflect-metadata": "^0.1.8",
     "systemjs": "0.19.39",
     "tslint": "^4.0.2",
-    "typescript": "^2.0.10",
-    "zone.js": "^0.6.25"
+    "typescript": "^2.1.4",
+    "zone.js": "^0.7.2"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/koleary94/Angular-2-Datepicker"
+    "url": "https://github.com/ZafarSaeedKhan/Angular-2-Datepicker"
   },
   "scripts": {
     "start": "tsc && concurrently \"tsc -w\" \"lite-server\" ",
@@ -52,6 +52,6 @@
     "ngc": "node_modules/.bin/ngc -p tsconfig-aot.json && rm integration-test/*.metadata.json"
   },
   "dependencies": {
-    "rxjs": "5.0.0-beta.12"
+    "rxjs": "5.0.0-rc.4"
   }
 }

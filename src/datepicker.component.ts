@@ -251,23 +251,23 @@ interface ValidationResult {
         padding: 5px;
       }
       
-      .col-1-5 button {
+      .col-1-5 .year {
         cursor: pointer;
         border: 0;
         border-radius: 50%;
         background: white;
         color: black;
+        display: table;
         height: 49px;
         width: 100%;
+        -webkit-transition: 0.37s;
+        transition: 0.37s;
       }
       
-      .btn:hover {
-        color: rgb(18, 133, 191) !important;
-      }
-      
-      .btn.active {
-        color: rgb(255, 255, 255) !important;
-        background-color: rgb(18, 133, 191) !important;
+      .col-1-5 .year span {
+        display:table-cell;
+        vertical-align: middle;
+        text-align: center;
       }
     `
   ],
@@ -383,7 +383,12 @@ interface ValidationResult {
           <div class="datepicker__calendar__content">
             <div class="grid" [@calendarAnimation]="animate">
               <div class="col-1-5" *ngFor="let year of calendarYears">
-                <button class="btn" [ngClass]="{'active': (year === currentYear) }" (click)="selectYear(year)">{{year}}</button>
+                <div class="year"
+                 [ngStyle]="{ 'background-color': getYearBackgroundColor(year),
+                      'color':  isHoveredYear(year) ? accentColor : getYearFontColor(year) }"
+                 (mouseenter)="hoveredYear = year"
+                 (mouseleave)="hoveredYear = null"
+                 (click)="selectYear(year)"><span>{{year}}</span></div>
               </div>
             </div>
             <div class="datepicker__calendar__cancel" (click)="onCancel()">
@@ -426,6 +431,7 @@ export class DatepickerComponent implements OnInit, OnChanges {
   @Input() currentMonth: string;
   @Input() dayNames: Array<String>;
   @Input() hoveredDay: Date;
+  hoveredYear: number = null;
   calendar: Calendar;
   currentMonthNumber: number;
   currentYear: number;
@@ -599,6 +605,20 @@ export class DatepickerComponent implements OnInit, OnChanges {
     this.inputText = inputText;
   }
 
+  /**
+   * Show or hide the list of years
+   */
+  showYearDiv() {
+    this.showYear = !this.showYear;
+    Object.keys(this.calendarYearRange)
+      .map((eachRange) => {
+        if(this.calendarYearRange[eachRange].indexOf(this.currentYear) >= 0) {
+          this.calendarYears = this.calendarYearRange[eachRange];
+          this.selectedYearRange = eachRange;
+        }
+      });
+  }
+
   // -------------------------------------------------------------------------------- //
   // --------------------------------- Click Handlers ------------------------------- //
   // -------------------------------------------------------------------------------- //
@@ -680,6 +700,38 @@ export class DatepickerComponent implements OnInit, OnChanges {
     }
   }
 
+  /**
+   * Update calendar on year selection
+   */
+  selectYear(year: number) {
+    this.currentYear = year;
+    this.setCurrentMonth(this.currentMonthNumber);
+    setTimeout(() => this.showYear = false)
+  }
+
+  /**
+   * Sets the date values associated with the calendar.
+   * Triggers animation if the year changes
+   */
+  changeYearList(direction: string) {
+    let newYearRange: string;
+    if (direction === 'left') {
+      newYearRange = `${+(this.selectedYearRange.split('-'))[0] - 20}-${+(this.selectedYearRange.split('-'))[0]-1}`;
+      if(newYearRange in this.calendarYearRange) {
+        this.triggerAnimation(direction);
+        this.selectedYearRange = newYearRange;
+        this.calendarYears = this.calendarYearRange[newYearRange];
+      }
+    } else if (direction === 'right') {
+      newYearRange = `${+(this.selectedYearRange.split('-'))[1] + 1}-${+(this.selectedYearRange.split('-'))[1] + 20}`;
+      if(newYearRange in this.calendarYearRange) {
+        this.triggerAnimation(direction);
+        this.selectedYearRange = newYearRange;
+        this.calendarYears = this.calendarYearRange[newYearRange];
+      }
+    }
+  }
+
   // -------------------------------------------------------------------------------- //
   // ----------------------------------- Listeners ---------------------------------- //
   // -------------------------------------------------------------------------------- //
@@ -710,11 +762,35 @@ export class DatepickerComponent implements OnInit, OnChanges {
   }
 
   /**
+   * Returns the background color for a year
+   */
+  getYearBackgroundColor(year: number): string {
+    let color = this.colors['white'];
+    if (this.currentYear === year) {
+      color = this.accentColor;
+    } else if (year === (new Date()).getUTCFullYear()) {
+      color = this.colors['lightGrey'];
+    }
+    return color;
+  }
+
+  /**
   * Returns the font color for a day
   */
   getDayFontColor(day: Date): string {
     let color = this.colors['black'];
     if (this.isChosenDay(day)) {
+      color = this.colors['white'];
+    }
+    return color;
+  }
+
+  /**
+   * Returns the font color for a year
+   */
+  getYearFontColor(year: number): string {
+    let color = this.colors['black'];
+    if (year === this.currentYear) {
       color = this.colors['white'];
     }
     return color;
@@ -747,6 +823,13 @@ export class DatepickerComponent implements OnInit, OnChanges {
   */
   isHoveredDay(day: Date): boolean {
     return this.hoveredDay ? this.hoveredDay === day && !this.isChosenDay(day) : false;
+  }
+
+  /**
+   * Returns whether a year is the year currently being hovered
+   */
+  isHoveredYear(year: number): boolean {
+    return this.hoveredYear ? (this.hoveredYear === year) && !(this.currentYear === year) : false;
   }
 
   /**
@@ -792,41 +875,4 @@ export class DatepickerComponent implements OnInit, OnChanges {
     return { 'invalidYear': true };
   }
 
-  showYearDiv() {
-    this.showYear = !this.showYear;
-    Object.keys(this.calendarYearRange)
-      .map((eachRange) => {
-        if(this.calendarYearRange[eachRange].indexOf(this.currentYear) >= 0) {
-          this.calendarYears = this.calendarYearRange[eachRange];
-          this.selectedYearRange = eachRange;
-        }
-    });
-
-  }
-
-  selectYear(year: number) {
-    this.currentYear = year;
-    this.setCurrentMonth(this.currentMonthNumber);
-    setTimeout(() => this.showYear = false)
-  }
-
-  changeYearList(direction: string) {
-    let newYearRange: string;
-    if (direction === 'left') {
-      newYearRange = `${+(this.selectedYearRange.split('-'))[0] - 20}-${+(this.selectedYearRange.split('-'))[0]-1}`;
-      if(newYearRange in this.calendarYearRange) {
-        this.triggerAnimation(direction);
-        this.selectedYearRange = newYearRange;
-        this.calendarYears = this.calendarYearRange[newYearRange];
-      }
-    } else if (direction === 'right') {
-      newYearRange = `${+(this.selectedYearRange.split('-'))[1] + 1}-${+(this.selectedYearRange.split('-'))[1] + 20}`;
-      if(newYearRange in this.calendarYearRange) {
-        this.triggerAnimation(direction);
-        this.selectedYearRange = newYearRange;
-        this.calendarYears = this.calendarYearRange[newYearRange];
-      }
-    }
-
-  }
 }
