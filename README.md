@@ -5,7 +5,7 @@
 
 A minimalist datepicker library for Angular 2
 
-![](https://j.gifs.com/ERwG6l.gif)
+![](./demo/datepicker.gif)
 
 ### Installation
 ```
