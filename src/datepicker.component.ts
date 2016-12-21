@@ -224,11 +224,7 @@ interface ValidationResult {
         padding: .2em .6em;
         font-size: 14px;
       }
-      
-      .btn {
-        background: red;
-      }
-      
+                 
       .grid {
         background: white;
         margin: 0 0 20px 0;
@@ -250,8 +246,28 @@ interface ValidationResult {
         padding-right: 20px;
       }
       
-      .col-1-4 {
-        width: 25%;
+      .col-1-5 {
+        width: calc(20% - 10px);
+        padding: 5px;
+      }
+      
+      .col-1-5 button {
+        cursor: pointer;
+        border: 0;
+        border-radius: 50%;
+        background: white;
+        color: black;
+        height: 49px;
+        width: 100%;
+      }
+      
+      .btn:hover {
+        color: rgb(18, 133, 191) !important;
+      }
+      
+      .btn.active {
+        color: rgb(255, 255, 255) !important;
+        background-color: rgb(18, 133, 191) !important;
       }
     `
   ],
@@ -328,15 +344,46 @@ interface ValidationResult {
         <div *ngIf="showYear" class="datepicker__calendar__inner">
         
           <div class="datepicker__calendar__nav">
-            <div class="datepicker__calendar__nav__header__inner__year">
-                <span>{{ currentYear }}</span>
+            <div class="datepicker__calendar__nav__arrow" (click)="changeYearList('left')" >
+              <svg class="datepicker__calendar__nav__chevron" x="0px" y="0px" viewBox="0 0 50 50">
+                <g>
+                  <path d="M39.7,7.1c0.5,0.5,0.5,1.2,0,1.7L29,19.6c-0.5,0.5-1.2,1.2-1.7,1.7L16.5,32.1c-0.5,0.5-1.2,0.5-1.7,0l-2.3-2.3
+                        c-0.5-0.5-1.2-1.2-1.7-1.7l-2.3-2.3c-0.5-0.5-0.5-1.2,0-1.7l10.8-10.8c0.5-0.5,1.2-1.2,1.7-1.7L31.7,0.8c0.5-0.5,1.2-0.5,1.7,0
+                        l2.3,2.3c0.5,0.5,1.2,1.2,1.7,1.7L39.7,7.1z"/>
+                </g>
+                <g>
+                  <path d="M33.4,49c-0.5,0.5-1.2,0.5-1.7,0L20.9,38.2c-0.5-0.5-1.2-1.2-1.7-1.7L8.4,25.7c-0.5-0.5-0.5-1.2,0-1.7l2.3-2.3
+                        c0.5-0.5,1.2-1.2,1.7-1.7l2.3-2.3c0.5-0.5,1.2-0.5,1.7,0l10.8,10.8c0.5,0.5,1.2,1.2,1.7,1.7l10.8,10.8c0.5,0.5,0.5,1.2,0,1.7
+                        L37.4,45c-0.5,0.5-1.2,1.2-1.7,1.7L33.4,49z"/>
+                </g>
+              </svg>
             </div>
+            
+            <div class="datepicker__calendar__nav__header__inner__year">
+                <span>{{ selectedYearRange }}</span>
+            </div>
+            
+            <div class="datepicker__calendar__nav__arrow" (click)="changeYearList('right')" >
+              <svg class="datepicker__calendar__nav__chevron" x="0px" y="0px" viewBox="0 0 50 50">
+                <g>
+                  <path d="M8.4,7.1c-0.5,0.5-0.5,1.2,0,1.7l10.8,10.8c0.5,0.5,1.2,1.2,1.7,1.7l10.8,10.8c0.5,0.5,1.2,0.5,1.7,0l2.3-2.3
+                      c0.5-0.5,1.2-1.2,1.7-1.7l2.3-2.3c0.5-0.5,0.5-1.2,0-1.7L29,13.2c-0.5-0.5-1.2-1.2-1.7-1.7L16.5,0.8c-0.5-0.5-1.2-0.5-1.7,0
+                      l-2.3,2.3c-0.5,0.5-1.2,1.2-1.7,1.7L8.4,7.1z"/>
+                </g>
+                <g>
+                  <path d="M14.8,49c0.5,0.5,1.2,0.5,1.7,0l10.8-10.8c0.5-0.5,1.2-1.2,1.7-1.7l10.8-10.8c0.5-0.5,0.5-1.2,0-1.7l-2.3-2.3
+                      c-0.5-0.5-1.2-1.2-1.7-1.7l-2.3-2.3c-0.5-0.5-1.2-0.5-1.7,0L20.9,28.5c-0.5,0.5-1.2,1.2-1.7,1.7L8.4,40.9c-0.5,0.5-0.5,1.2,0,1.7
+                      l2.3,2.3c0.5,0.5,1.2,1.2,1.7,1.7L14.8,49z"/>
+                </g>
+              </svg>
+            </div>
+            
           </div>
           
           <div class="datepicker__calendar__content">
-            <div class="grid">
-              <div class="col-1-4" *ngFor="let year of calendarYears">
-                <button class="btn" (click)="selectYear(year)">{{year}}</button>
+            <div class="grid" [@calendarAnimation]="animate">
+              <div class="col-1-5" *ngFor="let year of calendarYears">
+                <button class="btn" [ngClass]="{'active': (year === currentYear) }" (click)="selectYear(year)">{{year}}</button>
               </div>
             </div>
             <div class="datepicker__calendar__cancel" (click)="onCancel()">
@@ -376,7 +423,6 @@ export class DatepickerComponent implements OnInit, OnChanges {
   @Output() onSelect = new EventEmitter<Date>();
   // time
   @Input() calendarDays: Array<number>;
-  @Input() calendarYears: Array<number>;
   @Input() currentMonth: string;
   @Input() dayNames: Array<String>;
   @Input() hoveredDay: Date;
@@ -394,6 +440,10 @@ export class DatepickerComponent implements OnInit, OnChanges {
   yearControl: FormControl;
   //Show div for years
   showYear: boolean = false;
+  //list of years
+  calendarYears: Array<number>;
+  selectedYearRange: string;
+  calendarYearRange: any;
 
   constructor(private renderer: Renderer, private elementRef: ElementRef) {
     this.dateFormat = 'YYYY-MM-DD';
@@ -411,9 +461,15 @@ export class DatepickerComponent implements OnInit, OnChanges {
     // time
     this.calendar = new Calendar();
     this.dayNames = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
-    this.calendarYears = [
-      2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020
-    ];
+    this.calendarYearRange = {
+      '1970-1989': [1970, 1971, 1972, 1973, 1974, 1975, 1976, 1977, 1978, 1979, 1980, 1981, 1982, 1983, 1984, 1985, 1986, 1987, 1988, 1989],
+      '1990-2009': [1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009],
+      '2010-2029': [2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026, 2027, 2028, 2029],
+      '2030-2049': [2030, 2031, 2032, 2033, 2034, 2035, 2036, 2037, 2038, 2039, 2040, 2041, 2042, 2043, 2044, 2045, 2046, 2047, 2048, 2049],
+      '2050-2069': [2050, 2051, 2052, 2053, 2054, 2055, 2056, 2057, 2058, 2059, 2060, 2061, 2062, 2063, 2064, 2065, 2066, 2067, 2068, 2069],
+      '2070-2089': [2070, 2071, 2072, 2073, 2074, 2075, 2076, 2077, 2078, 2079, 2080, 2081, 2082, 2083, 2084, 2085, 2086, 2087, 2088, 2089],
+      '2090-2109': [2090, 2091, 2092, 2093, 2094, 2095, 2096, 2097, 2098, 2099, 2100, 2101, 2102, 2103, 2104, 2105, 2106, 2107, 2108, 2109]
+    };
     this.months = [
       'January', 'February', 'March', 'April', 'May', 'June', 'July',
       'August', 'September', 'October', 'November', ' December'
@@ -738,11 +794,39 @@ export class DatepickerComponent implements OnInit, OnChanges {
 
   showYearDiv() {
     this.showYear = !this.showYear;
+    Object.keys(this.calendarYearRange)
+      .map((eachRange) => {
+        if(this.calendarYearRange[eachRange].indexOf(this.currentYear) >= 0) {
+          this.calendarYears = this.calendarYearRange[eachRange];
+          this.selectedYearRange = eachRange;
+        }
+    });
+
   }
 
   selectYear(year: number) {
     this.currentYear = year;
     this.setCurrentMonth(this.currentMonthNumber);
     setTimeout(() => this.showYear = false)
+  }
+
+  changeYearList(direction: string) {
+    let newYearRange: string;
+    if (direction === 'left') {
+      newYearRange = `${+(this.selectedYearRange.split('-'))[0] - 20}-${+(this.selectedYearRange.split('-'))[0]-1}`;
+      if(newYearRange in this.calendarYearRange) {
+        this.triggerAnimation(direction);
+        this.selectedYearRange = newYearRange;
+        this.calendarYears = this.calendarYearRange[newYearRange];
+      }
+    } else if (direction === 'right') {
+      newYearRange = `${+(this.selectedYearRange.split('-'))[1] + 1}-${+(this.selectedYearRange.split('-'))[1] + 20}`;
+      if(newYearRange in this.calendarYearRange) {
+        this.triggerAnimation(direction);
+        this.selectedYearRange = newYearRange;
+        this.calendarYears = this.calendarYearRange[newYearRange];
+      }
+    }
+
   }
 }
