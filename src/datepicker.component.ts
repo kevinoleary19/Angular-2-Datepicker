@@ -5,14 +5,7 @@ import {
 import { FormControl, Validators } from '@angular/forms';
 
 import { Calendar } from './calendar';
-
-interface DateFormatFunction {
-  (date: Date): string;
-}
-
-interface ValidationResult {
-  [key: string]: boolean;
-}
+import { DateFormatFunction, ValidationResult } from './validation';
 
 @Component({
   selector: 'material-datepicker',

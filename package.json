@@ -1,6 +1,6 @@
 {
   "name": "@zafarsaeedkhan/angular2-material-datepicker",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": "Zafar Saeed Khan",
   "license": "MIT",
   "keywords": [
@@ -42,6 +42,12 @@
     "type": "git",
     "url": "https://github.com/ZafarSaeedKhan/Angular-2-Datepicker"
   },
+  "main": "./lib/index.js",
+  "module": "./lib/index.js",
+  "typings": "./lib/index.d.ts",
+  "files": [
+    "lib"
+  ],
   "scripts": {
     "start": "tsc && concurrently \"tsc -w\" \"lite-server\" ",
     "lint": "tslint ./src/datepicker.*.ts -t verbose",
@@ -49,7 +55,8 @@
     "test": "tsc && karma start karma.conf.js",
     "tsc": "tsc",
     "tsc:w": "tsc -w",
-    "ngc": "node_modules/.bin/ngc -p tsconfig-aot.json && rm integration-test/*.metadata.json"
+    "ngc": "node_modules/.bin/ngc -p tsconfig-aot.json && rm integration-test/*.metadata.json",
+    "build": "rm -rf lib && node_modules/.bin/ngc -p tsconfig-build.json"
   },
   "dependencies": {
     "rxjs": "5.0.0-rc.4"
