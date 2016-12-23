@@ -9,3 +9,5 @@ integration-test/**/*.js
 node_modules
 npm-debug.log
 src/**/*.js
+/.idea
+/lib
