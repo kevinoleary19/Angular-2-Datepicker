@@ -527,14 +527,14 @@ export class DatepickerComponent implements OnInit, OnChanges {
   clickListener: Function;
   // forms
   yearControl: FormControl;
-  //Show div for years
+  // Show div for years
   showYear: boolean = false;
   showMonths: boolean = false;
-  //list of years
+  // list of years
   calendarYears: Array<number>;
   selectedYearRange: string;
   calendarYearRange: any;
-  monthsList : Array<{name:string, value:number}>;
+  monthsList: Array<{name: string, value: number}>;
 
   constructor(private renderer: Renderer, private elementRef: ElementRef) {
     this.dateFormat = 'YYYY-MM-DD';
@@ -566,18 +566,18 @@ export class DatepickerComponent implements OnInit, OnChanges {
       'August', 'September', 'October', 'November', ' December'
     ];
     this.monthsList = [
-      {name:'Jan' , value:0},
-      {name:'Feb' , value:1},
-      {name:'Mar' , value:2},
-      {name:'Apr' , value:3},
-      {name:'May' , value:4},
-      {name:'Jun' , value:5},
-      {name:'Jul' , value:6},
-      {name:'Aug' , value:7},
-      {name:'Sep' , value:8},
-      {name:'Oct' , value:9},
-      {name:'Nov' , value:10},
-      {name:'Dec' , value:11}
+      {name: 'Jan', value: 0},
+      {name: 'Feb', value: 1},
+      {name: 'Mar', value: 2},
+      {name: 'Apr', value: 3},
+      {name: 'May', value: 4},
+      {name: 'Jun', value: 5},
+      {name: 'Jul', value: 6},
+      {name: 'Aug', value: 7},
+      {name: 'Sep', value: 8},
+      {name: 'Oct', value: 9},
+      {name: 'Nov', value: 10},
+      {name: 'Dec', value: 11}
     ];
     // listeners
     this.clickListener = renderer.listenGlobal(
@@ -711,7 +711,7 @@ export class DatepickerComponent implements OnInit, OnChanges {
     this.showYear = !this.showYear;
     Object.keys(this.calendarYearRange)
       .map((eachRange) => {
-        if(this.calendarYearRange[eachRange].indexOf(this.currentYear) >= 0) {
+        if (this.calendarYearRange[eachRange].indexOf(this.currentYear) >= 0) {
           this.calendarYears = this.calendarYearRange[eachRange];
           this.selectedYearRange = eachRange;
         }
@@ -724,7 +724,7 @@ export class DatepickerComponent implements OnInit, OnChanges {
   selectMonth(monthId: number) {
     this.currentMonthNumber = monthId;
     this.setCurrentMonth(monthId);
-    setTimeout(() => this.showMonths = !this.showMonths)
+    setTimeout(() => this.showMonths = !this.showMonths);
   }
 
   /**
@@ -785,11 +785,11 @@ export class DatepickerComponent implements OnInit, OnChanges {
   */
   changeYear(direction: string): void {
     if (direction === 'left') {
-      if(this.currentYear !== 1970) {
+      if (this.currentYear !== 1970) {
         this.currentYear = this.currentYear - 1;
       }
     } else if (direction === 'right') {
-      if(this.currentYear !== 2109) {
+      if (this.currentYear !== 2109) {
         this.currentYear = this.currentYear + 1;
       }
     }
@@ -838,7 +838,7 @@ export class DatepickerComponent implements OnInit, OnChanges {
   selectYear(year: number) {
     this.currentYear = year;
     this.setCurrentMonth(this.currentMonthNumber);
-    setTimeout(() => this.showYear = false)
+    setTimeout(() => this.showYear = false);
   }
 
   /**
@@ -848,15 +848,15 @@ export class DatepickerComponent implements OnInit, OnChanges {
   changeYearList(direction: string) {
     let newYearRange: string;
     if (direction === 'left') {
-      newYearRange = `${+(this.selectedYearRange.split('-'))[0] - 20}-${+(this.selectedYearRange.split('-'))[0]-1}`;
-      if(newYearRange in this.calendarYearRange) {
+      newYearRange = `${+(this.selectedYearRange.split('-'))[0] - 20}-${+(this.selectedYearRange.split('-'))[0] - 1}`;
+      if (newYearRange in this.calendarYearRange) {
         this.triggerAnimation(direction);
         this.selectedYearRange = newYearRange;
         this.calendarYears = this.calendarYearRange[newYearRange];
       }
     } else if (direction === 'right') {
       newYearRange = `${+(this.selectedYearRange.split('-'))[1] + 1}-${+(this.selectedYearRange.split('-'))[1] + 20}`;
-      if(newYearRange in this.calendarYearRange) {
+      if (newYearRange in this.calendarYearRange) {
         this.triggerAnimation(direction);
         this.selectedYearRange = newYearRange;
         this.calendarYears = this.calendarYearRange[newYearRange];
