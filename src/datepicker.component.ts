@@ -898,7 +898,7 @@ export class DatepickerComponent implements OnInit, OnChanges {
    */
   getYearBackgroundColor(year: number): string {
     let color = this.colors['white'];
-    if (this.currentYear === year) {
+    if (this.date && this.date.getFullYear() === year) {
       color = this.accentColor;
     } else if (year === (new Date()).getUTCFullYear()) {
       color = this.colors['lightGrey'];
@@ -911,7 +911,7 @@ export class DatepickerComponent implements OnInit, OnChanges {
    */
   getMonthBackgroundColor(month: number) {
     let color = this.colors['white'];
-    if (this.currentMonthNumber === month && this.currentYear === (new Date()).getUTCFullYear()) {
+    if (this.currentMonthNumber === month && this.date && this.currentYear === this.date.getFullYear()) {
       color = this.accentColor;
     } else if (month === (new Date()).getMonth() && this.currentYear === (new Date()).getUTCFullYear()) {
       color = this.colors['lightGrey'];
@@ -935,7 +935,7 @@ export class DatepickerComponent implements OnInit, OnChanges {
    */
   getYearFontColor(year: number): string {
     let color = this.colors['black'];
-    if (year === this.currentYear) {
+    if (this.date && this.date.getFullYear() === year) {
       color = this.colors['white'];
     }
     return color;
@@ -946,7 +946,7 @@ export class DatepickerComponent implements OnInit, OnChanges {
    */
   getMonthFontColor(month: number): string {
     let color = this.colors['black'];
-    if (month === this.currentMonthNumber && this.currentYear === (new Date()).getUTCFullYear()) {
+    if (month === this.currentMonthNumber && this.date && this.currentYear === this.date.getFullYear()) {
       color = this.colors['white'];
     }
     return color;
