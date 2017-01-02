@@ -347,10 +347,10 @@ import { DateFormatFunction, ValidationResult } from './validation';
             <div
               *ngFor="let day of calendarDays"
               class="datepicker__calendar__month__day"
-              [ngStyle]="{'cursor': day == 0 ? 'initial' : 'pointer',
+              [ngStyle]="{'cursor': day == 0 || !isSelectableDate(day) ? 'initial' : 'pointer',
                           'background-color': getDayBackgroundColor(day),
                           'color': isHoveredDay(day) ? accentColor : getDayFontColor(day),
-                          'pointer-events': day == 0 ? 'none' : ''
+                          'pointer-events': day == 0 || !isSelectableDate(day) ? 'none' : ''
                           }"
               (click)="onSelectDay(day)"
               (mouseenter)="hoveredDay = day"
@@ -545,6 +545,7 @@ export class DatepickerComponent implements OnInit, OnChanges {
       'black': '#333333',
       'blue': '#1285bf',
       'lightGrey': '#f1f1f1',
+      'darkGrey': '#A9A9A9',
       'white': '#ffffff'
     };
     this.accentColor = this.colors['blue'];
@@ -595,6 +596,12 @@ export class DatepickerComponent implements OnInit, OnChanges {
   }
 
   ngOnInit() {
+    if(this.rangeStart > this.rangeEnd) {
+      throw new Error(`
+      Error => [rangeStart] > [rangeEnd]
+       
+      rangeStart cannot be greater than rangeEnd`)
+    }
     this.syncVisualsWithDate();
   }
 
@@ -763,12 +770,11 @@ export class DatepickerComponent implements OnInit, OnChanges {
       }
     }
     // check if new date would be within range
-    let newDate = new Date(newYear, newMonth);
     let newDateValid: boolean;
     if (direction === 'left') {
-      newDateValid = !this.rangeStart || newDate.getTime() >= this.rangeStart.getTime();
+      newDateValid = !this.rangeStart || (new Date(newYear, newMonth, this.rangeStart.getDate()+1)) >= this.rangeStart;
     } else if (direction === 'right') {
-      newDateValid = !this.rangeEnd || newDate.getTime() <= this.rangeEnd.getTime();
+      newDateValid = !this.rangeEnd || (new Date(newYear, newMonth, this.rangeEnd.getDate())) <= this.rangeEnd;
     }
 
     if (newDateValid) {
@@ -926,8 +932,24 @@ export class DatepickerComponent implements OnInit, OnChanges {
     let color = this.colors['black'];
     if (this.isChosenDay(day)) {
       color = this.colors['white'];
+    } else if (!this.isSelectableDate(day)) {
+      color = this.colors['darkGrey'];
     }
     return color;
+  }
+
+  /**
+  * Returns the day is between rangeStart and rangeEnd
+  */
+  isSelectableDate(day: Date): boolean {
+    if(this.rangeStart && this.rangeEnd) {
+      return (day >= this.rangeStart && day <= this.rangeEnd);
+    } else if(this.rangeStart) {
+      return (day >= this.rangeStart);
+    } else if(this.rangeEnd) {
+      return (day <= this.rangeEnd);
+    }
+    return true;
   }
 
   /**
@@ -978,7 +1000,7 @@ export class DatepickerComponent implements OnInit, OnChanges {
   * Returns whether a day is the day currently being hovered
   */
   isHoveredDay(day: Date): boolean {
-    return this.hoveredDay ? this.hoveredDay === day && !this.isChosenDay(day) : false;
+    return this.hoveredDay ? this.hoveredDay === day && !this.isChosenDay(day) && this.isSelectableDate(day) : false;
   }
 
   /**

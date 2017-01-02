@@ -8,6 +8,7 @@ import { Component, Input } from '@angular/core';
         (onSelect)="onSelect($event)"
         dateFormat="YYYY-MM-DD"
         [rangeEnd]="testRangeDate"
+        [rangeStart]="testRangeStartDate"
         [accentColor]="'pink'"
       ></material-datepicker>
 
@@ -28,11 +29,15 @@ import { Component, Input } from '@angular/core';
 })
 export class AppComponent {
   date: Date;
+  testRangeStartDate: Date;
   disabled: boolean;
   @Input() testRangeDate: Date;
 
   constructor() {
     this.testRangeDate = new Date();
+    this.testRangeDate.setMonth(this.testRangeDate.getMonth() + 2);
+    this.testRangeStartDate = new Date();
+    this.testRangeStartDate.setMonth(this.testRangeStartDate.getMonth() - 2);
   }
 
   formatDate(date: Date): string {
