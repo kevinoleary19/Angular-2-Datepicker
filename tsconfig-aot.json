@@ -3,22 +3,25 @@
     "target": "es5",
     "module": "es2015",
     "moduleResolution": "node",
-    "sourceMap": true,
+    "sourceMap": false,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "removeComments": false,
-    "noImplicitAny": true,
-    "suppressImplicitAnyIndexErrors": true,
-    "types": [ "es6-shim" ]
+    "noImplicitAny": false,
+    "declaration": true,
+    "outDir": "./lib",
+    "stripInternal": true
   },
-
   "files": [
-    "integration-test/app.module.ts",
-    "integration-test/main.ts"
+    "./index.ts"
   ],
-
+  "exclude": [
+    "node_modules",
+    "**/*.ngfactory.*"
+  ],
   "angularCompilerOptions": {
-   "genDir": "aot",
-   "skipMetadataEmit" : false
- }
+    "genDir": "lib",
+    "skipMetadataEmit" : false,
+    "skipTemplateCodegen": true
+  }
 }
