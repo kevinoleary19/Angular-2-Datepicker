@@ -376,7 +376,6 @@ export class DatepickerComponent implements OnInit, OnChanges {
     this.accentColor = this.colors['blue'];
     this.altInputStyle = false;
     // time
-    this.calendar = new Calendar(this.firstDayOfTheWeek);
     this.updateDayNames();
 
     this.months = [
@@ -454,6 +453,7 @@ export class DatepickerComponent implements OnInit, OnChanges {
       // Out of range
       throw Error(`The firstDayOfTheWeek is not in range between ${0} and ${this.dayNamesOrdered.length - 1}`)
     } else {
+      this.calendar = new Calendar(this.firstDayOfTheWeek);
       this.dayNamesOrdered = this.dayNamesOrdered.slice(this.firstDayOfTheWeek, this.dayNamesOrdered.length)
         .concat(this.dayNamesOrdered.slice(0, this.firstDayOfTheWeek)); // Append beginning to end
     }
