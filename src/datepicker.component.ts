@@ -371,8 +371,6 @@ export class DatepickerComponent implements OnInit, OnChanges {
     this.accentColor = this.colors['blue'];
     this.altInputStyle = false;
     // time
-    console.log("First day sent is ", this.weekStart)
-    console.log("cancel text is ", this.cancelText)
     this.calendar = new Calendar(this.weekStart);
     this.dayNames = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
     this.months = [
