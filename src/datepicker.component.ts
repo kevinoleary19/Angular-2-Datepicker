@@ -1,18 +1,19 @@
 import {
-  animate,
-  Component,
-  ElementRef,
-  EventEmitter,
-  Input,
-  keyframes,
-  OnChanges,
-  OnInit,
-  Output,
-  Renderer,
-  SimpleChange,
-  style,
-  transition,
-  trigger
+    animate,
+    Component,
+    ElementRef,
+    EventEmitter,
+    Input,
+    keyframes,
+    OnChanges,
+    OnInit,
+    OnDestroy,
+    Output,
+    Renderer,
+    SimpleChange,
+    style,
+    transition,
+    trigger
 } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { Calendar } from './calendar';
@@ -175,6 +176,7 @@ interface ValidationResult {
         width: 11em;
         margin: 0 1em;
         text-align: center;
+        margin-top: 5px;
       }
 
       .datepicker__calendar__nav__header__form {
@@ -251,8 +253,8 @@ interface ValidationResult {
           </svg>
           </div>
           <div class="datepicker__calendar__nav__header">
-            <span>{{ currentMonth }}</span>
-            <input
+            <span>{{ currentMonth }} <template [ngIf]="!renderYearInput">{{currentYear}}</template></span>
+            <input *ngIf="renderYearInput"
               #yearInput
               class="datepicker__calendar__nav__header__year"
               placeholder="Year"
@@ -322,7 +324,7 @@ interface ValidationResult {
     </div>
     `
 })
-export class DatepickerComponent implements OnInit, OnChanges {
+export class DatepickerComponent implements OnInit, OnDestroy, OnChanges {
   private dateVal: Date;
   // two way bindings
   @Output() dateChange = new EventEmitter<Date>();
@@ -337,7 +339,8 @@ export class DatepickerComponent implements OnInit, OnChanges {
   @Input() accentColor: string;
   @Input() altInputStyle: boolean;
   @Input() dateFormat: string | DateFormatFunction;
-  @Input() dateformatSeperator: string = "/";
+  // Make sure to pass this as a string: [dateFormatSeperator]="'-'" for instance
+  @Input() dateformatSeperator: string = '/';
   @Input() fontFamily: string;
   @Input() rangeStart: Date;
   @Input() rangeEnd: Date;
@@ -346,6 +349,7 @@ export class DatepickerComponent implements OnInit, OnChanges {
   @Input() inputText: string;
   // view logic
   @Input() showCalendar: boolean;
+  @Input() renderYearInput: boolean = true;
   // events
   @Output() onSelect = new EventEmitter<Date>();
   // time
@@ -491,6 +495,7 @@ export class DatepickerComponent implements OnInit, OnChanges {
     // transforms input text into appropriate date format
     let inputText: string = '';
     const dateFormat: string | DateFormatFunction = this.dateFormat;
+
     if (typeof dateFormat === 'string') {
       switch (dateFormat.toUpperCase()) {
         case 'YYYY-MM-DD':
@@ -708,7 +713,6 @@ export class DatepickerComponent implements OnInit, OnChanges {
     return { 'invalidYear': true };
   }
 
-
   /**
    * Shorthand to validate paging between months
    *
@@ -719,6 +723,12 @@ export class DatepickerComponent implements OnInit, OnChanges {
     return new Date(rangeDate.getFullYear(), rangeDate.getMonth()).getTime();
   }
 
+  /**
+   * Check whether the day of the given date is within the configured rangeStart en rangeEnd
+   *
+   * @param day
+   * @returns {boolean}
+   */
   isInsideRange(day: Date) {
     let afterStart = !this.rangeStart || day.getTime() >= this.rangeStart.getTime();
     let beforeEnd = !this.rangeEnd || day.getTime() <= this.rangeEnd.getTime();
@@ -726,6 +736,13 @@ export class DatepickerComponent implements OnInit, OnChanges {
     return afterStart && beforeEnd;
   }
 
+  /**
+   * Shorthand to get the day color, using isInsideRange as well to display unavailable dates
+   * as lightGrey.
+   *
+   * @param day
+   * @returns {string}
+   */
   getDayColor(day: Date) {
 
     if (day && this.isInsideRange(day)) {
