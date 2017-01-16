@@ -1,21 +1,9 @@
 import {
-    animate,
-    Component,
-    ElementRef,
-    EventEmitter,
-    Input,
-    keyframes,
-    OnChanges,
-    OnInit,
-    OnDestroy,
-    Output,
-    Renderer,
-    SimpleChange,
-    style,
-    transition,
-    trigger
+  animate, Component, ElementRef, EventEmitter, Input, keyframes, OnChanges,
+  OnInit, OnDestroy, Output, Renderer, SimpleChange, state, style, transition, trigger
 } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
+
 import { Calendar } from './calendar';
 
 interface DateFormatFunction {
