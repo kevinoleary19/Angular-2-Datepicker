@@ -1,9 +1,20 @@
 import {
-  animate, Component, ElementRef, EventEmitter, Input, keyframes, OnChanges,
-  OnInit, Output, Renderer, SimpleChange, state, style, transition, trigger
+  animate,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  keyframes,
+  OnChanges,
+  OnInit,
+  Output,
+  Renderer,
+  SimpleChange,
+  style,
+  transition,
+  trigger
 } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
-
 import { Calendar } from './calendar';
 
 interface DateFormatFunction {
@@ -39,7 +50,7 @@ interface ValidationResult {
         position: relative;
         display: inline-block;
         color: #2b2b2b;
-        font-family: 'Helvetica Neue', 'Helvetica', 'Arial', 'Calibri', 'Roboto';
+        font-family: 'Helvetica Neue', 'Helvetica', 'Arial', 'Calibri', 'Roboto', sans-serif;
       }
 
       .datepicker__calendar {
@@ -286,9 +297,9 @@ interface ValidationResult {
             <div
               *ngFor="let day of calendarDays"
               class="datepicker__calendar__month__day"
-              [ngStyle]="{'cursor': day == 0 ? 'initial' : 'pointer',
+              [ngStyle]="{'cursor': day == 0 || !isInsideRange(day) ? 'initial' : 'pointer',
                           'background-color': getDayBackgroundColor(day),
-                          'color': isHoveredDay(day) ? accentColor : getDayFontColor(day),
+                          'color': getDayColor(day),
                           'pointer-events': day == 0 ? 'none' : ''
                           }"
               (click)="onSelectDay(day)"
@@ -326,6 +337,7 @@ export class DatepickerComponent implements OnInit, OnChanges {
   @Input() accentColor: string;
   @Input() altInputStyle: boolean;
   @Input() dateFormat: string | DateFormatFunction;
+  @Input() dateformatSeperator: string = "/";
   @Input() fontFamily: string;
   @Input() rangeStart: Date;
   @Input() rangeEnd: Date;
@@ -363,10 +375,11 @@ export class DatepickerComponent implements OnInit, OnChanges {
     this.colors = {
       'black': '#333333',
       'blue': '#1285bf',
+      'purple': '#461d53',
       'lightGrey': '#f1f1f1',
       'white': '#ffffff'
     };
-    this.accentColor = this.colors['blue'];
+    this.accentColor = this.colors['purple'];
     this.altInputStyle = false;
     // time
     this.calendar = new Calendar();
@@ -475,22 +488,22 @@ export class DatepickerComponent implements OnInit, OnChanges {
     if (day.length < 2) {
       day = `0${day}`;
     }
-    // transforms input text into appropiate date format
+    // transforms input text into appropriate date format
     let inputText: string = '';
     const dateFormat: string | DateFormatFunction = this.dateFormat;
     if (typeof dateFormat === 'string') {
       switch (dateFormat.toUpperCase()) {
         case 'YYYY-MM-DD':
-          inputText = `${date.getFullYear()}/${month}/${day}`;
+          inputText = `${date.getFullYear()}${this.dateformatSeperator}${month}${this.dateformatSeperator}${day}`;
           break;
         case 'MM-DD-YYYY':
-          inputText = `${month}/${day}/${date.getFullYear()}`;
+          inputText = `${month}${this.dateformatSeperator}${day}${this.dateformatSeperator}${date.getFullYear()}`;
           break;
         case 'DD-MM-YYYY':
-          inputText = `${day}/${month}/${date.getFullYear()}`;
+          inputText = `${day}${this.dateformatSeperator}${month}${this.dateformatSeperator}${date.getFullYear()}`;
           break;
         default:
-          inputText = `${date.getFullYear()}/${month}/${day}`;
+          inputText = `${date.getFullYear()}${this.dateformatSeperator}${month}${this.dateformatSeperator}${day}`;
           break;
       }
     } else if (typeof dateFormat === 'function') {
@@ -532,9 +545,9 @@ export class DatepickerComponent implements OnInit, OnChanges {
     let newDate = new Date(newYear, newMonth);
     let newDateValid: boolean;
     if (direction === 'left') {
-      newDateValid = !this.rangeStart || newDate.getTime() >= this.rangeStart.getTime();
+      newDateValid = !this.rangeStart || newDate.getTime() >= this.getMonthRangeAsTime(this.rangeStart);
     } else if (direction === 'right') {
-      newDateValid = !this.rangeEnd || newDate.getTime() <= this.rangeEnd.getTime();
+      newDateValid = !this.rangeEnd || newDate.getTime() <= this.getMonthRangeAsTime(this.rangeEnd);
     }
 
     if (newDateValid) {
@@ -563,9 +576,11 @@ export class DatepickerComponent implements OnInit, OnChanges {
   * Returns the font color for a day
   */
   onSelectDay(day: Date): void {
-    this.date = day;
-    this.onSelect.emit(day);
-    this.showCalendar = !this.showCalendar;
+    if (this.isInsideRange(day)) {
+      this.date = day;
+      this.onSelect.emit(day);
+      this.showCalendar = !this.showCalendar;
+    }
   }
 
   /**
@@ -691,5 +706,32 @@ export class DatepickerComponent implements OnInit, OnChanges {
       return null;
     }
     return { 'invalidYear': true };
+  }
+
+
+  /**
+   * Shorthand to validate paging between months
+   *
+   * @param rangeDate
+   * @returns {number}
+   */
+  private getMonthRangeAsTime(rangeDate: Date) {
+    return new Date(rangeDate.getFullYear(), rangeDate.getMonth()).getTime();
+  }
+
+  isInsideRange(day: Date) {
+    let afterStart = !this.rangeStart || day.getTime() >= this.rangeStart.getTime();
+    let beforeEnd = !this.rangeEnd || day.getTime() <= this.rangeEnd.getTime();
+
+    return afterStart && beforeEnd;
+  }
+
+  getDayColor(day: Date) {
+
+    if (day && this.isInsideRange(day)) {
+      return this.isHoveredDay(day) ? this.accentColor : this.getDayFontColor(day);
+
+    }
+    return this.colors['lightGrey'];
   }
 }
