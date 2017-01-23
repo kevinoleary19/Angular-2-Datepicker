@@ -305,7 +305,7 @@ interface ValidationResult {
             class="datepicker__calendar__cancel"
             (click)="onCancel()"
           >
-            {{ cancelButtonLabel }}
+            {{cancelText}}
           </div>
         </div>
       </div>
@@ -337,17 +337,16 @@ export class DatepickerComponent implements OnInit, OnChanges {
   @Input() inputText: string;
   // view logic
   @Input() showCalendar: boolean;
+  @Input() cancelText: string = 'Cancel';
+  @Input() weekStart: number = 0;
   // events
   @Output() onSelect = new EventEmitter<Date>();
   // time
   @Input() calendarDays: Array<number>;
   @Input() currentMonth: string;
   @Input() dayNames: Array<String> = ['S', 'M', 'T', 'W', 'T', 'F', 'S']; // Default order: firstDayOfTheWeek = 0
-  @Input() firstDayOfTheWeek = 0; // 0 For Sunday
   @Input() hoveredDay: Date;
   @Input() months: Array<string>;
-  // The label of the cancel button.
-  @Input() cancelButtonLabel: string = 'Cancel';
   dayNamesOrdered: Array<String>;
   calendar: Calendar;
   currentMonthNumber: number;
@@ -398,6 +397,7 @@ export class DatepickerComponent implements OnInit, OnChanges {
   }
 
   ngOnInit() {
+    this.updateDayNames();
     this.syncVisualsWithDate();
   }
 
@@ -448,14 +448,14 @@ export class DatepickerComponent implements OnInit, OnChanges {
    * first day will be sunday.
    */
   private updateDayNames() {
-    this.dayNamesOrdered = this.dayNames.slice(); // Copy DayNames with default value (firstDayOfTheWeek = 0)
-    if (this.firstDayOfTheWeek < 0 || this.firstDayOfTheWeek >= this.dayNamesOrdered.length) {
+    this.dayNamesOrdered = this.dayNames.slice(); // Copy DayNames with default value (weekStart = 0)
+    if (this.weekStart < 0 || this.weekStart >= this.dayNamesOrdered.length) {
       // Out of range
-      throw Error(`The firstDayOfTheWeek is not in range between ${0} and ${this.dayNamesOrdered.length - 1}`)
+      throw Error(`The weekStart is not in range between ${0} and ${this.dayNamesOrdered.length - 1}`)
     } else {
-      this.calendar = new Calendar(this.firstDayOfTheWeek);
-      this.dayNamesOrdered = this.dayNamesOrdered.slice(this.firstDayOfTheWeek, this.dayNamesOrdered.length)
-        .concat(this.dayNamesOrdered.slice(0, this.firstDayOfTheWeek)); // Append beginning to end
+      this.calendar = new Calendar(this.weekStart);
+      this.dayNamesOrdered = this.dayNamesOrdered.slice(this.weekStart, this.dayNamesOrdered.length)
+        .concat(this.dayNamesOrdered.slice(0, this.weekStart)); // Append beginning to end
     }
   }
 
