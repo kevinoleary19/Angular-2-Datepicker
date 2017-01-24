@@ -371,7 +371,7 @@ export class DatepickerComponent implements OnInit, OnChanges {
     this.accentColor = this.colors['blue'];
     this.altInputStyle = false;
     // time
-    this.calendar = new Calendar(this.weekStart);
+    this.calendar = new Calendar();
     this.dayNames = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
     this.months = [
       'January', 'February', 'March', 'April', 'May', 'June', 'July',
@@ -393,8 +393,8 @@ export class DatepickerComponent implements OnInit, OnChanges {
   }
 
   ngOnInit() {
-    this.calendar.firstWeekDay = this.weekStart;
-    for (let i = 0; i < this.weekStart; i++) {
+    this.calendar.firstWeekDay = Number(this.weekStart);
+    for (let i = 0; i < Number(this.weekStart); i++) {
       this.dayNames.push(this.dayNames.shift());
     }
     this.syncVisualsWithDate();
