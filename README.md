@@ -9,7 +9,7 @@ A minimalist datepicker library for Angular 2
 
 ### Installation
 ```
-npm install angular2-material-datepicker
+npm install ng-material-datepicker
 ```
 
 ### Usage
