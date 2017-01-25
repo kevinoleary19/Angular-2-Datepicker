@@ -98,21 +98,21 @@ describe('DatepickerComponent', () => {
       const day = new Date(2016, 3, 15);
       comp.dateFormat = 'YYYY-MM-DD';
       comp.setInputText(day);
-      expect(comp.inputText).toEqual('2016/04/15');
+      expect(comp.inputText).toEqual('2016-04-15');
     });
 
     it('sets correct inputText when dateFormat equals "MM-DD-YYYY"', () => {
       const day = new Date(2016, 3, 15);
       comp.dateFormat = 'MM-DD-YYYY';
       comp.setInputText(day);
-      expect(comp.inputText).toEqual('04/15/2016');
+      expect(comp.inputText).toEqual('04-15-2016');
     });
 
     it('sets correct inputText when dateFormat equals "DD-MM-YYYY"', () => {
       const day = new Date(2016, 3, 15);
       comp.dateFormat = 'DD-MM-YYYY';
       comp.setInputText(day);
-      expect(comp.inputText).toEqual('15/04/2016');
+      expect(comp.inputText).toEqual('15-04-2016');
     });
 
     it('sets correct inputText when dateFormat is a custom function', () => {

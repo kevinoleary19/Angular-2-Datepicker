@@ -5,6 +5,7 @@ import {
 import { FormControl, Validators } from '@angular/forms';
 
 import { Calendar } from './calendar';
+import * as moment from 'moment';
 
 interface DateFormatFunction {
   (date: Date): string;
@@ -274,7 +275,7 @@ interface ValidationResult {
           <div class="datepicker__calendar__labels">
             <div
               class="datepicker__calendar__label"
-              *ngFor="let day of dayNames"
+              *ngFor="let day of dayNamesOrdered"
             >
               {{ day }}
             </div>
@@ -312,6 +313,8 @@ interface ValidationResult {
     `
 })
 export class DatepickerComponent implements OnInit, OnChanges {
+  private readonly DEFAULT_FORMAT = 'YYYY-MM-DD';
+
   private dateVal: Date;
   // two way bindings
   @Output() dateChange = new EventEmitter<Date>();
@@ -341,12 +344,13 @@ export class DatepickerComponent implements OnInit, OnChanges {
   // time
   @Input() calendarDays: Array<number>;
   @Input() currentMonth: string;
-  @Input() dayNames: Array<String>;
+  @Input() dayNames: Array<String> = ['S', 'M', 'T', 'W', 'T', 'F', 'S']; // Default order: firstDayOfTheWeek = 0
   @Input() hoveredDay: Date;
+  @Input() months: Array<string>;
+  dayNamesOrdered: Array<String>;
   calendar: Calendar;
   currentMonthNumber: number;
   currentYear: number;
-  months: Array<string>;
   // animation
   animate: string;
   // colors
@@ -358,7 +362,7 @@ export class DatepickerComponent implements OnInit, OnChanges {
 
 
   constructor(private renderer: Renderer, private elementRef: ElementRef) {
-    this.dateFormat = 'YYYY-MM-DD';
+    this.dateFormat = this.DEFAULT_FORMAT;
     // view logic
     this.showCalendar = false;
     // colors
@@ -371,8 +375,8 @@ export class DatepickerComponent implements OnInit, OnChanges {
     this.accentColor = this.colors['blue'];
     this.altInputStyle = false;
     // time
-    this.calendar = new Calendar(this.weekStart);
-    this.dayNames = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+    this.updateDayNames();
+
     this.months = [
       'January', 'February', 'March', 'April', 'May', 'June', 'July',
       'August', 'September', 'October', 'November', ' December'
@@ -393,16 +397,16 @@ export class DatepickerComponent implements OnInit, OnChanges {
   }
 
   ngOnInit() {
-    this.calendar.firstWeekDay = this.weekStart;
-    for (let i = 0; i < this.weekStart; i++) {
-      this.dayNames.push(this.dayNames.shift());
-    }
+    this.updateDayNames();
     this.syncVisualsWithDate();
   }
 
   ngOnChanges(changes: { [propertyName: string]: SimpleChange }) {
     if ((changes['date'] || changes['dateFormat'])) {
       this.syncVisualsWithDate();
+    }
+    if (changes['firstDayOfTheWeek'] || changes['dayNames']) {
+      this.updateDayNames();
     }
   }
 
@@ -436,6 +440,23 @@ export class DatepickerComponent implements OnInit, OnChanges {
 
     const calendarArray = this.calendar.monthDays(this.currentYear, this.currentMonthNumber);
     this.calendarDays = [].concat.apply([], calendarArray);
+    this.calendarDays = this.filterInvalidDays(this.calendarDays);
+  }
+
+  /**
+   * Update the day names order. The order can be modified with the firstDayOfTheWeek input, while 0 means that the
+   * first day will be sunday.
+   */
+  private updateDayNames() {
+    this.dayNamesOrdered = this.dayNames.slice(); // Copy DayNames with default value (weekStart = 0)
+    if (this.weekStart < 0 || this.weekStart >= this.dayNamesOrdered.length) {
+      // Out of range
+      throw Error(`The weekStart is not in range between ${0} and ${this.dayNamesOrdered.length - 1}`)
+    } else {
+      this.calendar = new Calendar(this.weekStart);
+      this.dayNamesOrdered = this.dayNamesOrdered.slice(this.weekStart, this.dayNamesOrdered.length)
+        .concat(this.dayNamesOrdered.slice(0, this.weekStart)); // Append beginning to end
+    }
   }
 
   /**
@@ -458,6 +479,7 @@ export class DatepickerComponent implements OnInit, OnChanges {
     this.currentMonth = this.months[monthNumber];
     const calendarArray = this.calendar.monthDays(this.currentYear, this.currentMonthNumber);
     this.calendarDays = [].concat.apply([], calendarArray);
+    this.calendarDays = this.filterInvalidDays(this.calendarDays);
   }
 
   /**
@@ -472,37 +494,15 @@ export class DatepickerComponent implements OnInit, OnChanges {
   * Sets the visible input text
   */
   setInputText(date: Date): void {
-    let month: string = (date.getMonth() + 1).toString();
-    // always prefixes one digit numbers with a 0
-    if (month.length < 2) {
-      month = `0${month}`;
-    }
-    let day: string = (date.getDate()).toString();
-    if (day.length < 2) {
-      day = `0${day}`;
-    }
-    // transforms input text into appropiate date format
-    let inputText: string = '';
+    let inputText = "";
     const dateFormat: string | DateFormatFunction = this.dateFormat;
-    if (typeof dateFormat === 'string') {
-      switch (dateFormat.toUpperCase()) {
-        case 'YYYY-MM-DD':
-          inputText = `${date.getFullYear()}/${month}/${day}`;
-          break;
-        case 'MM-DD-YYYY':
-          inputText = `${month}/${day}/${date.getFullYear()}`;
-          break;
-        case 'DD-MM-YYYY':
-          inputText = `${day}/${month}/${date.getFullYear()}`;
-          break;
-        default:
-          inputText = `${date.getFullYear()}/${month}/${day}`;
-          break;
-      }
+    if (dateFormat === undefined || dateFormat === null) {
+      inputText = moment(date).format(this.DEFAULT_FORMAT);
+    } else if (typeof dateFormat === 'string') {
+      inputText = moment(date).format(dateFormat);
     } else if (typeof dateFormat === 'function') {
       inputText = dateFormat(date);
     }
-
     this.inputText = inputText;
   }
 
@@ -552,6 +552,33 @@ export class DatepickerComponent implements OnInit, OnChanges {
   }
 
   /**
+   * Check if a date is within the range.
+   * @param date The date to check.
+   * @return true if the date is within the range, false if not.
+   */
+  isDateValid(date: Date): boolean {
+    return (!this.rangeStart || date.getTime() >= this.rangeStart.getTime()) &&
+           (!this.rangeEnd || date.getTime() <= this.rangeEnd.getTime());
+  }
+
+  /**
+   * Filter out the days that are not in the date range.
+   * @param calendarDays The calendar days
+   * @return {Array} The input with the invalid days replaced by 0
+   */
+  filterInvalidDays(calendarDays: Array<number>): Array<number> {
+    let newCalendarDays = [];
+    calendarDays.forEach((day: number | Date) => {
+      if (day === 0 || !this.isDateValid(<Date> day)) {
+        newCalendarDays.push(0)
+      } else {
+        newCalendarDays.push(day)
+      }
+    });
+    return newCalendarDays;
+  }
+
+  /**
   * Closes the calendar when the cancel button is clicked
   */
   onCancel(): void {
@@ -569,9 +596,11 @@ export class DatepickerComponent implements OnInit, OnChanges {
   * Returns the font color for a day
   */
   onSelectDay(day: Date): void {
-    this.date = day;
-    this.onSelect.emit(day);
-    this.showCalendar = !this.showCalendar;
+    if (this.isDateValid(day)) {
+      this.date = day;
+      this.onSelect.emit(day);
+      this.showCalendar = !this.showCalendar;
+    }
   }
 
   /**
