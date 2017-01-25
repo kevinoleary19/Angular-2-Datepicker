@@ -596,7 +596,7 @@ export class DatepickerComponent implements OnInit, OnChanges {
   }
 
   ngOnInit() {
-    if(this.rangeStart > this.rangeEnd && this.rangeEnd) {
+    if ((this.rangeStart && this.rangeEnd) && this.rangeStart > this.rangeEnd) {
       throw new Error(`
       Error => [rangeStart] > [rangeEnd]
        
