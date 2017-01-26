@@ -449,13 +449,13 @@ export class DatepickerComponent implements OnInit, OnChanges {
    */
   private updateDayNames() {
     this.dayNamesOrdered = this.dayNames.slice(); // Copy DayNames with default value (weekStart = 0)
-    if (this.weekStart < 0 || this.weekStart >= this.dayNamesOrdered.length) {
+    if (Number(this.weekStart) < 0 || Number(this.weekStart) >= this.dayNamesOrdered.length) {
       // Out of range
       throw Error(`The weekStart is not in range between ${0} and ${this.dayNamesOrdered.length - 1}`)
     } else {
-      this.calendar = new Calendar(this.weekStart);
-      this.dayNamesOrdered = this.dayNamesOrdered.slice(this.weekStart, this.dayNamesOrdered.length)
-        .concat(this.dayNamesOrdered.slice(0, this.weekStart)); // Append beginning to end
+      this.calendar = new Calendar(Number(this.weekStart));
+      this.dayNamesOrdered = this.dayNamesOrdered.slice(Number(this.weekStart), this.dayNamesOrdered.length)
+        .concat(this.dayNamesOrdered.slice(0, Number(this.weekStart))); // Append beginning to end
     }
   }
 
