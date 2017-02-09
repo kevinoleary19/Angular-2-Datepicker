@@ -1,6 +1,6 @@
 import {
   animate, Component, ElementRef, EventEmitter, Input, keyframes, OnChanges,
-  OnInit, Output, Renderer, SimpleChange, state, style, transition, trigger
+  OnInit, Output, Renderer, SimpleChange, style, transition, trigger
 } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 
@@ -361,7 +361,7 @@ export class DatepickerComponent implements OnInit, OnChanges {
   yearControl: FormControl;
 
 
-  constructor(private renderer: Renderer, private elementRef: ElementRef) {
+  constructor(renderer: Renderer, private elementRef: ElementRef) {
     this.dateFormat = this.DEFAULT_FORMAT;
     // view logic
     this.showCalendar = false;
@@ -623,7 +623,6 @@ export class DatepickerComponent implements OnInit, OnChanges {
   * Closes the calendar if a click is not within the datepicker component
   */
   handleGlobalClick(event: MouseEvent): void {
-    const withinElement = this.elementRef.nativeElement.contains(event.target);
     if (!this.elementRef.nativeElement.contains(event.target)) {
       this.closeCalendar();
     }
