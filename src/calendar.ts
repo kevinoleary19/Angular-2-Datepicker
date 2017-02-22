@@ -5,14 +5,6 @@ export class Calendar {
         this.firstWeekDay = firstWeekDay; // 0 = Sunday
     }
 
-    weekStartDate(date: any) {
-        var startDate = new Date(date.getTime());
-        while (startDate.getDay() !== this.firstWeekDay) {
-            startDate.setDate(startDate.getDate() - 1);
-        }
-        return startDate;
-    }
-
     monthDates(year: any, month: any, dayFormatter:any = null, weekFormatter:any = null) {
         if ((typeof year !== "number") || (year < 1970)) {
             throw ('year must be a number >= 1970');
@@ -23,7 +15,11 @@ export class Calendar {
         var weeks: Array<any> = [],
             week: Array<any> = [],
             i = 0,
-            date = this.weekStartDate(new Date(year, month, 1));
+            date = date = new Date(year, month, 1),
+            diff = (date.getDay() - this.firstWeekDay) % 7;
+
+        date.setDate(date.getDate() - diff);;
+
         do {
             for (i=0; i<7; i++) {
                 week.push(dayFormatter ? dayFormatter(date) : date);
