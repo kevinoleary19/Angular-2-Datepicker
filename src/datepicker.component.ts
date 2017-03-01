@@ -193,13 +193,6 @@ interface ValidationResult {
       .datepicker__calendar__nav__header__year:focus {
         outline: none;
       }
-
-      .datepicker__input {
-        outline: none;
-        border-radius: 0.1rem;
-        padding: .2em .6em;
-        font-size: 14px;
-      }
     `
   ],
   template: `
@@ -207,17 +200,12 @@ interface ValidationResult {
       class="datepicker"
       [ngStyle]="{'font-family': fontFamily}"
     >
-      <input
+      <md-input type="text"
         [disabled]="disabled"
-        class="datepicker__input"
         [placeholder]="placeholder"
-        [ngStyle]="{'color': altInputStyle ? colors['white'] : colors['black'],
-                    'background-color': altInputStyle ? accentColor : colors['white'],
-                    'border': altInputStyle ? '' : '1px solid #dadada'}"
         (click)="onInputClick()"
         [(ngModel)]="inputText"
-        readonly="true"
-      >
+      ></md-input>
       <div
         class="datepicker__calendar"
         *ngIf="showCalendar"
