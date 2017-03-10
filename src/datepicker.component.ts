@@ -1,6 +1,6 @@
 import {
   animate, Component, ElementRef, EventEmitter, Input, keyframes, OnChanges,
-  OnInit, Output, Renderer, SimpleChange, state, style, transition, trigger
+  OnInit, Output, Renderer, SimpleChange, style, transition, trigger
 } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 
@@ -382,7 +382,7 @@ export class DatepickerComponent implements OnInit, OnChanges {
       'August', 'September', 'October', 'November', ' December'
     ];
     // listeners
-    this.clickListener = renderer.listenGlobal(
+    this.clickListener = this.renderer.listenGlobal(
       'document',
       'click',
       (event: MouseEvent) => this.handleGlobalClick(event)
@@ -451,7 +451,7 @@ export class DatepickerComponent implements OnInit, OnChanges {
     this.dayNamesOrdered = this.dayNames.slice(); // Copy DayNames with default value (weekStart = 0)
     if (this.weekStart < 0 || this.weekStart >= this.dayNamesOrdered.length) {
       // Out of range
-      throw Error(`The weekStart is not in range between ${0} and ${this.dayNamesOrdered.length - 1}`)
+      throw Error(`The weekStart is not in range between ${0} and ${this.dayNamesOrdered.length - 1}`);
     } else {
       this.calendar = new Calendar(this.weekStart);
       this.dayNamesOrdered = this.dayNamesOrdered.slice(this.weekStart, this.dayNamesOrdered.length)
@@ -494,7 +494,7 @@ export class DatepickerComponent implements OnInit, OnChanges {
   * Sets the visible input text
   */
   setInputText(date: Date): void {
-    let inputText = "";
+    let inputText = '';
     const dateFormat: string | DateFormatFunction = this.dateFormat;
     if (dateFormat === undefined || dateFormat === null) {
       inputText = moment(date).format(this.DEFAULT_FORMAT);
@@ -570,9 +570,9 @@ export class DatepickerComponent implements OnInit, OnChanges {
     let newCalendarDays = [];
     calendarDays.forEach((day: number | Date) => {
       if (day === 0 || !this.isDateValid(<Date> day)) {
-        newCalendarDays.push(0)
+        newCalendarDays.push(0);
       } else {
-        newCalendarDays.push(day)
+        newCalendarDays.push(day);
       }
     });
     return newCalendarDays;
@@ -624,7 +624,7 @@ export class DatepickerComponent implements OnInit, OnChanges {
   */
   handleGlobalClick(event: MouseEvent): void {
     const withinElement = this.elementRef.nativeElement.contains(event.target);
-    if (!this.elementRef.nativeElement.contains(event.target)) {
+    if (!withinElement) {
       this.closeCalendar();
     }
   }
