@@ -50,8 +50,10 @@ Optional parameters are listed below.
 |`placeholder` | string | This text will be shown if the date is empty |
 | `rangeStart` | Date | The beginning boundary for selecting a date. For example, passing in `new Date(2015,2)` will prevent the user from being able to get to February 2015. |
 | `rangeEnd` | Date | Same as `rangeStart`, but for the end boundary. e.g. passing in `new Date()` will prevent the user from being able to get to the next month. |
-| `cancelText` | string | default is `Cancel` can be changed to the text you desire. |
-| `weekStart` | number | default is `0` witch is Sunday, Monday is `1` and so on |
+| `cancelText` | string | Default is `Cancel` can be changed to the text you desire. |
+| `weekStart` | number | Default is `0` witch is Sunday, Monday is `1` and so on. |
+| `canBeCleared` | boolean | If `true` the date can be cleared with a small button in the lower right. |
+| `clearText` | string |  Default is `Clear`. |
 
 
 ### CSS

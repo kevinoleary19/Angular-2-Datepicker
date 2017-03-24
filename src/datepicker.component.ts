@@ -76,6 +76,21 @@ interface ValidationResult {
         color: #b1b1b1;
       }
 
+      .datepicker__calendar__clear {
+        position: absolute;
+        bottom: 1em;
+        right: 1.8em;
+        color: #d8d8d8;
+        cursor: pointer;
+        -webkit-transition: 0.37s;
+        transition: 0.37s;
+      }
+
+      .datepicker__calendar__clear:hover {
+        color: #b1b1b1;
+      }
+
+
       .datepicker__calendar__content {
         margin-top: 0.4em;
       }
@@ -307,6 +322,13 @@ interface ValidationResult {
           >
             {{cancelText}}
           </div>
+          <div
+            *ngIf="canBeCleared"
+            class="datepicker__calendar__clear"
+            (click)="onClear()"
+          >
+            {{clearText}}
+          </div>
         </div>
       </div>
     </div>
@@ -332,6 +354,8 @@ export class DatepickerComponent implements OnInit, OnChanges {
   @Input() fontFamily: string;
   @Input() rangeStart: Date;
   @Input() rangeEnd: Date;
+  @Input() canBeCleared: boolean;
+  @Input() clearText: string = 'Clear';
   // data
   @Input() placeholder: string = 'Select a date';
   @Input() inputText: string;
@@ -582,6 +606,14 @@ export class DatepickerComponent implements OnInit, OnChanges {
   * Closes the calendar when the cancel button is clicked
   */
   onCancel(): void {
+    this.closeCalendar();
+  }
+
+  /**
+   * Clears the input and closes the datepicker.
+   */
+  onClear(): void {
+    this.date = null;
     this.closeCalendar();
   }
 
