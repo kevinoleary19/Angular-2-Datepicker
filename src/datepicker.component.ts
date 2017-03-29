@@ -614,6 +614,7 @@ export class DatepickerComponent implements OnInit, OnChanges {
    */
   onClear(): void {
     this.date = null;
+    this.onSelect.emit(null);
     this.closeCalendar();
   }
 
