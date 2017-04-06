@@ -4,6 +4,7 @@ import { Component, Input } from '@angular/core';
   selector: 'my-app',
   template: `
       <material-datepicker
+        name="input-date-name"
         [(date)]="date"
         (onSelect)="onSelect($event)"
         dateFormat="YYYY-MM-DD"
