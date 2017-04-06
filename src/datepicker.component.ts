@@ -208,6 +208,7 @@ interface ValidationResult {
       [ngStyle]="{'font-family': fontFamily}"
     >
       <input
+        [name]="name"
         [disabled]="disabled"
         class="datepicker__input"
         [placeholder]="placeholder"
@@ -335,6 +336,7 @@ export class DatepickerComponent implements OnInit, OnChanges {
   // data
   @Input() placeholder: string = 'Select a date';
   @Input() inputText: string;
+  @Input() name: string;
   // view logic
   @Input() showCalendar: boolean;
   @Input() cancelText: string = 'Cancel';
