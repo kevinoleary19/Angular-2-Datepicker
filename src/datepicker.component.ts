@@ -341,7 +341,7 @@ export class DatepickerComponent implements OnInit, OnChanges {
   // two way bindings
   @Output() dateChange = new EventEmitter<Date>();
 
-  @Input() get date(): Date { return this.dateVal; };
+  @Input() get date(): Date { return this.dateVal; }
   set date(val: Date) {
     this.dateVal = val;
     this.dateChange.emit(val);
@@ -475,7 +475,7 @@ export class DatepickerComponent implements OnInit, OnChanges {
     this.dayNamesOrdered = this.dayNames.slice(); // Copy DayNames with default value (weekStart = 0)
     if (this.weekStart < 0 || this.weekStart >= this.dayNamesOrdered.length) {
       // Out of range
-      throw Error(`The weekStart is not in range between ${0} and ${this.dayNamesOrdered.length - 1}`)
+      throw Error(`The weekStart is not in range between ${0} and ${this.dayNamesOrdered.length - 1}`);
     } else {
       this.calendar = new Calendar(this.weekStart);
       this.dayNamesOrdered = this.dayNamesOrdered.slice(this.weekStart, this.dayNamesOrdered.length)
@@ -518,7 +518,7 @@ export class DatepickerComponent implements OnInit, OnChanges {
   * Sets the visible input text
   */
   setInputText(date: Date): void {
-    let inputText = "";
+    let inputText = '';
     const dateFormat: string | DateFormatFunction = this.dateFormat;
     if (dateFormat === undefined || dateFormat === null) {
       inputText = moment(date).format(this.DEFAULT_FORMAT);
@@ -594,9 +594,9 @@ export class DatepickerComponent implements OnInit, OnChanges {
     let newCalendarDays = [];
     calendarDays.forEach((day: number | Date) => {
       if (day === 0 || !this.isDateValid(<Date> day)) {
-        newCalendarDays.push(0)
+        newCalendarDays.push(0);
       } else {
-        newCalendarDays.push(day)
+        newCalendarDays.push(day);
       }
     });
     return newCalendarDays;
