@@ -3,6 +3,10 @@
     "target": "es5",
     "module": "commonjs",
     "moduleResolution": "node",
+    "lib": [
+      "es6",
+      "dom"
+    ],
     "sourceMap": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
@@ -10,5 +14,5 @@
     "noImplicitAny": false
   },
   "exclude": [ "node_modules", "**/*.ngfactory.*" ],
-  "types": [ "es6-shim", "jasmine" ]
+  "types": ["jasmine" ]
 }

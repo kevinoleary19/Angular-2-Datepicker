@@ -8,6 +8,7 @@ import { Component, Input } from '@angular/core';
         (onSelect)="onSelect($event)"
         dateFormat="YYYY-MM-DD"
         [rangeEnd]="testRangeDate"
+        [canBeCleared]="true"
       ></material-datepicker>
 
       <button (click)="setToday()">today</button>

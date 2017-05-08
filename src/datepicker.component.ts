@@ -76,6 +76,21 @@ interface ValidationResult {
         color: #b1b1b1;
       }
 
+      .datepicker__calendar__clear {
+        position: absolute;
+        bottom: 1em;
+        right: 1.8em;
+        color: #d8d8d8;
+        cursor: pointer;
+        -webkit-transition: 0.37s;
+        transition: 0.37s;
+      }
+
+      .datepicker__calendar__clear:hover {
+        color: #b1b1b1;
+      }
+
+
       .datepicker__calendar__content {
         margin-top: 0.4em;
       }
@@ -307,6 +322,13 @@ interface ValidationResult {
           >
             {{cancelText}}
           </div>
+          <div
+            *ngIf="canBeCleared"
+            class="datepicker__calendar__clear"
+            (click)="onClear()"
+          >
+            {{clearText}}
+          </div>
         </div>
       </div>
     </div>
@@ -319,7 +341,7 @@ export class DatepickerComponent implements OnInit, OnChanges {
   // two way bindings
   @Output() dateChange = new EventEmitter<Date>();
 
-  @Input() get date(): Date { return this.dateVal; };
+  @Input() get date(): Date { return this.dateVal; }
   set date(val: Date) {
     this.dateVal = val;
     this.dateChange.emit(val);
@@ -332,6 +354,8 @@ export class DatepickerComponent implements OnInit, OnChanges {
   @Input() fontFamily: string;
   @Input() rangeStart: Date;
   @Input() rangeEnd: Date;
+  @Input() canBeCleared: boolean;
+  @Input() clearText: string = 'Clear';
   // data
   @Input() placeholder: string = 'Select a date';
   @Input() inputText: string;
@@ -451,7 +475,7 @@ export class DatepickerComponent implements OnInit, OnChanges {
     this.dayNamesOrdered = this.dayNames.slice(); // Copy DayNames with default value (weekStart = 0)
     if (this.weekStart < 0 || this.weekStart >= this.dayNamesOrdered.length) {
       // Out of range
-      throw Error(`The weekStart is not in range between ${0} and ${this.dayNamesOrdered.length - 1}`)
+      throw Error(`The weekStart is not in range between ${0} and ${this.dayNamesOrdered.length - 1}`);
     } else {
       this.calendar = new Calendar(this.weekStart);
       this.dayNamesOrdered = this.dayNamesOrdered.slice(this.weekStart, this.dayNamesOrdered.length)
@@ -494,7 +518,7 @@ export class DatepickerComponent implements OnInit, OnChanges {
   * Sets the visible input text
   */
   setInputText(date: Date): void {
-    let inputText = "";
+    let inputText = '';
     const dateFormat: string | DateFormatFunction = this.dateFormat;
     if (dateFormat === undefined || dateFormat === null) {
       inputText = moment(date).format(this.DEFAULT_FORMAT);
@@ -570,9 +594,9 @@ export class DatepickerComponent implements OnInit, OnChanges {
     let newCalendarDays = [];
     calendarDays.forEach((day: number | Date) => {
       if (day === 0 || !this.isDateValid(<Date> day)) {
-        newCalendarDays.push(0)
+        newCalendarDays.push(0);
       } else {
-        newCalendarDays.push(day)
+        newCalendarDays.push(day);
       }
     });
     return newCalendarDays;
@@ -582,6 +606,15 @@ export class DatepickerComponent implements OnInit, OnChanges {
   * Closes the calendar when the cancel button is clicked
   */
   onCancel(): void {
+    this.closeCalendar();
+  }
+
+  /**
+   * Clears the input and closes the datepicker.
+   */
+  onClear(): void {
+    this.date = null;
+    this.onSelect.emit(null);
     this.closeCalendar();
   }
 
