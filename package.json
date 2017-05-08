@@ -48,7 +48,7 @@
     "test": "tsc && karma start karma.conf.js",
     "tsc": "tsc",
     "tsc:w": "tsc -w",
-    "ngc": "node_modules/.bin/ngc -p tsconfig-aot.json && rm integration-test/*.metadata.json"
+    "ngc": "node_modules/.bin/ngc -p tsconfig-aot.json"
   },
   "dependencies": {
     "moment": "^2.17.1",
