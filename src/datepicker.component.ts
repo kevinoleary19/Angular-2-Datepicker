@@ -345,7 +345,7 @@ export class DatepickerComponent implements OnInit, OnChanges {
   @Input() calendarDays: Array<number>;
   @Input() currentMonth: string;
   @Input() dayNames: Array<String> = ['S', 'M', 'T', 'W', 'T', 'F', 'S']; // Default order: firstDayOfTheWeek = 0
-  @Input() hoveredDay: Date;
+  @Input() hoveredDay: Date | null;
   @Input() months: Array<string>;
   dayNamesOrdered: Array<String>;
   calendar: Calendar;
