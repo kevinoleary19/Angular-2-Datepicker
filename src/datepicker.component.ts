@@ -323,6 +323,7 @@ interface ValidationResult {
     `
 })
 export class DatepickerComponent implements OnInit, OnChanges, ControlValueAccessor {
+    onTouched: any;
   private readonly DEFAULT_FORMAT = 'YYYY-MM-DD';
 
   private dateVal: Date;
@@ -370,6 +371,7 @@ export class DatepickerComponent implements OnInit, OnChanges, ControlValueAcces
   // forms
   yearControl: FormControl;
 
+  //Function to be called on date selection
   changeValue: any;
 
 
@@ -741,12 +743,16 @@ export class DatepickerComponent implements OnInit, OnChanges, ControlValueAcces
     return { 'invalidYear': true };
   }
 
+  // -------------------------------------------------------------------------------- //
+  // --------------------------- Control Value Accessor ----------------------------- //
+  // -------------------------------------------------------------------------------- //
+  /**
+  * Set of functions to implement ControlValueAccessor interface, allowing this to be
+  * used with Angular/forms
+  */
   writeValue(obj: any): void {
-      if (obj) {
-          //Convert to value
-          this.date = obj;
-          this.syncVisualsWithDate();
-      }
+    this.date = obj;
+    this.syncVisualsWithDate();
   }
 
   registerOnChange(fn: any): void {
@@ -754,6 +760,7 @@ export class DatepickerComponent implements OnInit, OnChanges, ControlValueAcces
   }
 
   registerOnTouched(fn: any): void {
+      this.onTouched = fn;
   }
 
   setDisabledState(isDisabled: boolean): void {
