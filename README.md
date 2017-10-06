@@ -3,7 +3,10 @@
 [![Version](http://img.shields.io/npm/v/angular2-material-datepicker.svg)](https://www.npmjs.org/package/angular2-material-datepicker)
 [![BuildStatus](https://travis-ci.org/koleary94/Angular-2-Datepicker.svg?branch=master)](https://travis-ci.org/koleary94/Angular-2-Datepicker)
 
-A minimalist datepicker library for Angular 2
+Fork of a minimalist datepicker library for Angular 2 by [koleary94](https://github.com/koleary94). As it seems development has stopped progressing and it is a solid base
+for a simple calendar module.
+
+Will attempt to resolve open issues currently on the main github repo!
 
 ![](https://j.gifs.com/ERwG6l.gif)
 
