@@ -1,8 +1,9 @@
 import {
   animate, Component, ElementRef, EventEmitter, Input, keyframes, OnChanges,
-  OnInit, Output, Renderer, SimpleChange, state, style, transition, trigger
+  OnInit, Output, Renderer, SimpleChange, state, style, transition, trigger,
+  forwardRef
 } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
+import { FormControl, Validators, ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import { Calendar } from './calendar';
 import * as moment from 'moment';
@@ -14,6 +15,8 @@ interface DateFormatFunction {
 interface ValidationResult {
   [key: string]: boolean;
 }
+
+
 
 @Component({
   selector: 'material-datepicker',
@@ -34,6 +37,13 @@ interface ValidationResult {
         ]))
       ])
     ])
+  ],
+  providers: [
+      {
+          provide: NG_VALUE_ACCESSOR,
+          useExisting: forwardRef(() => DatepickerComponent),
+          multi: true
+      }
   ],
   styles: [
     `.datepicker {
@@ -312,7 +322,7 @@ interface ValidationResult {
     </div>
     `
 })
-export class DatepickerComponent implements OnInit, OnChanges {
+export class DatepickerComponent implements OnInit, OnChanges, ControlValueAccessor {
   private readonly DEFAULT_FORMAT = 'YYYY-MM-DD';
 
   private dateVal: Date;
@@ -359,6 +369,8 @@ export class DatepickerComponent implements OnInit, OnChanges {
   clickListener: Function;
   // forms
   yearControl: FormControl;
+
+  changeValue: any;
 
 
   constructor(private renderer: Renderer, private elementRef: ElementRef) {
@@ -600,6 +612,7 @@ export class DatepickerComponent implements OnInit, OnChanges {
       this.date = day;
       this.onSelect.emit(day);
       this.showCalendar = !this.showCalendar;
+      this.changeValue(day);
     }
   }
 
@@ -727,4 +740,24 @@ export class DatepickerComponent implements OnInit, OnChanges {
     }
     return { 'invalidYear': true };
   }
+
+  writeValue(obj: any): void {
+      if (obj) {
+          //Convert to value
+          this.date = obj;
+          this.syncVisualsWithDate();
+      }
+  }
+
+  registerOnChange(fn: any): void {
+      this.changeValue = fn;
+  }
+
+  registerOnTouched(fn: any): void {
+  }
+
+  setDisabledState(isDisabled: boolean): void {
+      this.disabled = isDisabled;
+  }
+
 }
