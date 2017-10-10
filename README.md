@@ -3,22 +3,33 @@
 [![Version](http://img.shields.io/npm/v/angular2-material-datepicker.svg)](https://www.npmjs.org/package/angular2-material-datepicker)
 [![BuildStatus](https://travis-ci.org/koleary94/Angular-2-Datepicker.svg?branch=master)](https://travis-ci.org/koleary94/Angular-2-Datepicker)
 
-Fork of a minimalist datepicker library for Angular 2 by [koleary94](https://github.com/koleary94). As it seems development has stopped progressing and it is a solid base
+Fork of a minimalist datepicker library for Angular by [koleary94](https://github.com/koleary94). As it seems development has stopped progressing and it is a solid base
 for a simple calendar module.
 
-Will attempt to resolve open issues currently on the main github repo!
+Will attempt to resolve a few of the bigger open issues currently in the main repo
 
 ![](https://j.gifs.com/ERwG6l.gif)
 
 ### Installation
 ```
-npm install angular2-material-datepicker
+npm install angular-mat-datepicker
 ```
+
+### DEPRECATION
+Please note I will be deprecating....
+```
+<material-datepicker [(date)]="yourModelDate"></material-datepicker>
+```
+In favor of
+```
+<material-datepicker [(ngModel)]="yourModelDate"></material-datepicker>
+```
+It works better for the framework and encourages less bad patterns.
 
 ### Usage
 Import the Datepicker Module and add it to the `imports` of your module
 ```
-import { DatepickerModule } from 'angular2-material-datepicker'
+import { DatepickerModule } from 'angular-mat-datepicker'
 
 @NgModule({
   imports: [ DatepickerModule ],
@@ -29,7 +40,7 @@ export class YourModule { }
 ```
 If you already have a module of the same name, you can create an alias
 ```
-import { DatepickerModule as YourAlias } from 'angular2-material-datepicker'
+import { DatepickerModule as YourAlias } from 'angular-mat-datepicker'
 ```
 Call the component from within a template
 ```

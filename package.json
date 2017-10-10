@@ -40,7 +40,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/FeedDahBirds/Angular-2-Datepicker"
+    "url": "https://github.com/FeedDahBirds/Angular-Mat-Datepicker"
   },
   "scripts": {
     "start": "concurrently \"tsc -w\" \"lite-server\" ",
